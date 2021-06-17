@@ -17,6 +17,13 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "zone.js/dist/zone-error",
+              "@mapbox/geojsonhint",
+              "@mapbox/geojson-extent",
+              "@mapbox/geojson-area"
+            ],
             "outputPath": "dist/water-map",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -123,6 +130,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "water-map"
+    }
+  },
+  "defaultProject": "water-map",
+  "cli": {
+    "analytics": "fb74b7a0-8dad-4395-b2bf-6a32d5fc214d",
+  }
 }

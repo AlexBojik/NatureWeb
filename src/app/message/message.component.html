@@ -1,0 +1,24 @@
+<div class="w-100">
+  <mat-form-field class="w-100">
+    <mat-label>Пользователь:</mat-label>
+    <input matInput disabled [value]="msg.userName">
+  </mat-form-field><br>
+  <mat-form-field class="w-100">
+    <mat-label>Текст обращения:</mat-label>
+    <textarea matInput disabled [(ngModel)]="msg.text" style="min-height: 120px"></textarea>
+  </mat-form-field><br>
+  <mat-form-field class="w-100">
+    <mat-label>Статус: </mat-label>
+    <mat-select [(ngModel)]="msg.status" required>
+      <mat-option *ngFor="let status of [0, 1, 2, 3, 4]" [value]="status">
+        {{messageStatus[status]}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field><br>
+  <mat-spinner *ngIf="!msg.imageLoads"></mat-spinner>
+  <div *ngIf="msg.imageLoads">
+    <button *ngFor="let img of msg.images" mat-button (click)="openImages(img)">
+      <img src="{{imageCatalog}}{{img}}" alt="" style="width: 100px; height: 100px">
+    </button>
+  </div>
+</div>

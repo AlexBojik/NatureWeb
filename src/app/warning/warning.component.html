@@ -1,0 +1,11 @@
+<div class="warning">
+  <div>
+    <mat-icon color="warn" inline="true" style="font-size: 50px; line-height: 50px">warning</mat-icon>
+    <label style="font-size: 50px; line-height: 50px; vertical-align: bottom; margin-left: 20px; color: red;">Внимание!</label>
+  </div>
+  <div *ngFor="let n of news">
+    <mat-divider></mat-divider>
+    <app-news [news]=n></app-news>
+  </div>
+</div>
+

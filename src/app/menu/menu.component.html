@@ -1,0 +1,37 @@
+<mat-toolbar color="primary" class="fixed-top mat-elevation-z3">
+  <button mat-icon-button (click)="showMapComponent()" class="logo-button mat-elevation-z3">
+    <img src="./assets/png/logo.png" class="logo" alt="Логотип">
+  </button>
+  <button mat-button (click)="showWarning()" style="margin-left: 20px">
+    <mat-icon color="warn" >report_problem</mat-icon></button>
+  <button mat-button *ngIf="showLayersButton" (click)="showLayersComponent()">
+    <mat-icon class="margin-5">layers</mat-icon>Слои</button>
+  <button mat-button *ngIf="showDictionaries" (click)="showDictionaryComponent()">
+    <mat-icon class="margin-5">storage</mat-icon>Справочники</button>
+  <button mat-button *ngIf="showAdmin" (click)="showAdminComponent()">
+    <mat-icon class="margin-5">admin_panel_settings</mat-icon>Администрирование</button>
+  <button mat-button *ngIf="showUsers" (click)="showUsersComponent()">
+    <mat-icon class="margin-5">people</mat-icon>Пользователи</button>
+  <div *ngIf="showSearch">
+    <mat-form-field style="width: 300px">
+      <input #filter type="text" matInput style="font-size: small" (keyup)="$event.key == 'Enter' ? search(filter.value) : null">
+    </mat-form-field>
+    <button mat-icon-button (click)="search(filter.value)">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+
+  <button mat-button *ngIf="showAdmin" (click)="showMessageComponent()">
+    <mat-icon class="margin-5">supervisor_account</mat-icon>
+    <span [matBadge]="countMessages" [matBadgeHidden]="countMessages === 0" matBadgeOverlap="false" matBadgeColor="warn">Обращения</span></button>
+  <span class="example-spacer"></span>
+  <button *ngIf="!userName" mat-button (click)="showAuth()">
+    <mat-icon class="margin-5">account_box</mat-icon>Войти через госуслуги
+  </button>
+  <button *ngIf="!!userName" mat-button [matMenuTriggerFor]="menu">
+    <mat-icon class="margin-5">account_box</mat-icon>{{userName}}
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="exit()">Выход</button>
+  </mat-menu>
+</mat-toolbar>

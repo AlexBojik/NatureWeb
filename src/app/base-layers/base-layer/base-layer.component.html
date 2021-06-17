@@ -1,0 +1,17 @@
+<form [formGroup]="baseLayerForm" style="width: 620px">
+  <mat-form-field class="w-100">
+    <mat-label>Наименование</mat-label>
+    <input type="text" matInput required formControlName="name" [readonly]="default">
+  </mat-form-field>
+  <mat-form-field class="w-100">
+    <mat-label>Представление</mat-label>
+    <input type="text" matInput required formControlName="description">
+  </mat-form-field>
+  <mat-form-field class="w-100">
+    <mat-label>Адрес</mat-label>
+    <input type="text" matInput required formControlName="url">
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="baseLayerForm.invalid">Сохранить</button>
+  <button mat-raised-button color="warn" (click)="delete()"
+          [disabled]="default" style="margin-left: 10px">Удалить</button>
+</form>

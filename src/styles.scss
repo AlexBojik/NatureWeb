@@ -1,1 +1,71 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+::after {
+  outline: none !important;
+}
+*:focus {
+  outline: none !important;
+}
+
+svg {
+  vertical-align: top;
+}
+.mat-toolbar {
+  height: 44px;
+}
+body {
+  margin: 0;
+}
+.s100 {
+  width: 100vw;
+  height: 100vh;
+}
+.fixed-top {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 6;
+}
+.mat-checkbox-frame {
+  border-color: #3f51b5;
+}
+.mat-button {
+  font-size: 12px !important;
+  min-width: 0 !important;
+}
+.mat-radio-outer-circle {
+  border-color: #3f51b5;
+}
+.mat-expansion-panel-header-description, .mat-expansion-indicator::after {
+  color: #3f51b5;
+}
+.mat-grid-tile .mat-figure {
+  align-items: start !important;
+  justify-content: start !important;
+}
+.mapboxgl-popup-content {
+  width: max-content;
+  max-width: 30vw;
+}
+.w-100 {
+  width: 100% !important;
+}
+.mat-grid-tile {
+  overflow: auto !important;
+}
+
+.mat-grid-tile .mat-figure {
+  display: block !important;
+}
+
+.mat-drawer-inner-container {
+  overflow: hidden !important;
+}
+
+.margin-top {
+  margin-top: 44px;
+}
+.example-spacer {
+  flex: 1 1 auto;
+}

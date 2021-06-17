@@ -1,0 +1,14 @@
+<div>
+  <p *ngFor="let f of fields">
+    <mat-form-field style="width: 100%">
+      <mat-label>{{f.field.name}}</mat-label>
+      <input type="text" *ngIf="f.field.type === 0 || f.field.type === -2" matInput [(ngModel)]="f.value">
+      <mat-checkbox *ngIf="f.field.id === -1">{{f.field.name}}</mat-checkbox>
+      <mat-select *ngIf="f.field.type > 0">
+        <mat-option *ngFor="let opt of f.field.options" [value]="opt.id">
+          {{opt.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+</div>

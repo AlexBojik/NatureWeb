@@ -1,0 +1,61 @@
+<div *ngIf="isSelected">
+  <mat-tab-group>
+    <mat-tab label="Объекты" *ngIf="isFillLayer">
+      <div class="w-100">
+        <app-object-table></app-object-table>
+      </div>
+    </mat-tab>
+    <mat-tab label="Свойства">
+      <form [formGroup]="layerForm" style="margin-top: 10px">
+        <div class="fields-container">
+          <mat-form-field style="width: 50%">
+            <mat-label>Наименование</mat-label>
+            <input matInput placeholder="Наименование" formControlName="name" required>
+          </mat-form-field>
+          <mat-form-field *ngIf="isFillLayer" style="width: 30%">
+            <mat-label>Цвет</mat-label>
+            <input matInput [ngxMatColorPicker]="picker" formControlName="col" required>
+            <ngx-mat-color-toggle matSuffix [for]="picker"></ngx-mat-color-toggle>
+            <ngx-mat-color-picker #picker></ngx-mat-color-picker>
+          </mat-form-field>
+          <mat-form-field *ngIf="isFillLayer" style="width: 30%">
+            <mat-label>Цвет границы</mat-label>
+            <input matInput [ngxMatColorPicker]="picker1" formControlName="col1" required>
+            <ngx-mat-color-toggle matSuffix [for]="picker1"></ngx-mat-color-toggle>
+            <ngx-mat-color-picker #picker1></ngx-mat-color-picker>
+          </mat-form-field>
+        </div>
+      </form>
+      <mat-list role="list" *ngIf="isFillLayer">
+        <div mat-subheader>Состав дополнительных полей</div>
+        <mat-list-item *ngFor="let field of fields" role="listitem" class="fields-container">
+          <mat-form-field style="width: 40%">
+            <mat-label>Наименование</mat-label>
+            <input matInput placeholder="Наименование поля" [(ngModel)]="field.name" required>
+          </mat-form-field>
+          <mat-form-field style="width: 40%">
+            <mat-label>Тип поля</mat-label>
+            <mat-select [(ngModel)]="field.type" required>
+              <mat-option *ngFor="let dict of dictionaries" [value]="dict.id">
+                {{dict.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-icon-button style="color:red;" (click)="deleteField(field)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-list-item>
+        <button mat-button color="primary" (click)="addField()">
+          <mat-icon>add</mat-icon>
+          Добавить поле
+        </button>
+      </mat-list>
+      <p>
+        <button mat-raised-button color="primary" (click)="save()" [disabled]="!layerForm.valid">
+          <mat-icon>save</mat-icon>
+          Сохранить
+        </button>
+      </p>
+    </mat-tab>
+  </mat-tab-group>
+</div>

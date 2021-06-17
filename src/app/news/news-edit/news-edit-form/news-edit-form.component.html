@@ -1,0 +1,24 @@
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Начало</mat-label>
+    <input matInput [matDatepicker]="datepicker_s" [(ngModel)]="news.start" required>
+    <mat-datepicker-toggle matSuffix [for]="datepicker_s"></mat-datepicker-toggle>
+    <mat-datepicker #datepicker_s></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Окончание</mat-label>
+    <input matInput [matDatepicker]="datepicker_e" [(ngModel)]="news.end" >
+    <mat-datepicker-toggle matSuffix [for]="datepicker_e"></mat-datepicker-toggle>
+    <mat-datepicker #datepicker_e></mat-datepicker>
+  </mat-form-field>
+  <p>
+    <mat-form-field class="w-100">
+      <mat-label>Представление</mat-label>
+      <textarea matInput placeholder="" [(ngModel)]="news.description" style="min-height: 100px" required></textarea>
+    </mat-form-field>
+  </p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button color="primary" mat-dialog-close>Отмена</button>
+  <button mat-raised-button color="primary" (click)="saveNews()" [mat-dialog-close]="news">Записать</button>
+</div>

@@ -1,0 +1,20 @@
+<div>
+  <button mat-raised-button color="primary" (click)="openFileUploadDialog()">
+    <mat-icon>attach_file</mat-icon>
+    Загрузка файлов
+  </button>
+  <button mat-raised-button color="primary" (click)="openFileUploadDialog(true)" style="margin-left: 8px">
+    <mat-icon>folder_open</mat-icon>
+    Загрузка каталога
+  </button>
+  <button mat-raised-button color="primary" (click)="updateWfs()" style="margin-left: 8px">
+    <mat-icon>update</mat-icon>
+    Обновить
+  </button>
+  <button mat-raised-button color="primary" (click)="importKPT()" style="margin-left: 8px">
+    <mat-icon>update</mat-icon>
+    Загрузка из КПТ
+  </button>
+  <input type="file" #fileInput hidden accept=".mif, .xls, .xlsx, .kml" multiple="multiple"/>
+  <input type="file" #folderInput hidden webkitDirectory/>
+</div>

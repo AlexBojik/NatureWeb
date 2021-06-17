@@ -1,0 +1,20 @@
+<div>
+  <form [formGroup]="userForm" style="margin-top: 10px">
+    <div class="fields-container">
+      <mat-form-field>
+        <mat-label>ФИО</mat-label>
+        <input matInput placeholder="ФИО" formControlName="name" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Группа пользователя</mat-label>
+        <input matInput placeholder="Группа" formControlName="group" required>
+      </mat-form-field>
+    </div>
+  </form>
+  <p>
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="!userForm.valid">
+      <mat-icon>save</mat-icon>
+      Сохранить
+    </button>
+  </p>
+</div>

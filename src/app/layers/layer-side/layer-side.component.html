@@ -1,0 +1,22 @@
+<div class="side-layers">
+  <mat-accordion>
+    <mat-expansion-panel class="primary">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="primary">
+          <button mat-button color="primary"><b>Базовые слои</b></button>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+        <app-base-layer-list [radioButtons]="true"></app-base-layer-list>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="primary" expanded="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <button mat-button color="primary"><b>Cлои c данными</b></button>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+    <div>
+      <app-tree-layers></app-tree-layers>
+    </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

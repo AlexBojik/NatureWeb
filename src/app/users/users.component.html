@@ -1,0 +1,25 @@
+<div class="users">
+  <mat-grid-list cols="4" rowHeight="100%">
+    <mat-grid-tile colspan="1" rowspan="1">
+      <div style="margin-left: 10px; overflow: auto">
+        <p>
+          <button mat-raised-button color="primary" (click)="add()">
+            <mat-icon>add</mat-icon>
+            Добавить группу
+          </button>
+        </p>
+        <p *ngFor="let userGroup of userGroups">
+          <button mat-button color="primary" (click)="onClick(userGroup)">
+            {{userGroup.name}}
+            <mat-icon *ngIf="userGroup === current && userGroup.id > 0" color="primary" (click)="edit(userGroup)">edit</mat-icon>
+          </button>
+        </p>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="3" rowspan="1">
+      <mat-list>
+        <mat-list-item *ngFor="let user of users">{{user.name}}</mat-list-item>
+      </mat-list>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>

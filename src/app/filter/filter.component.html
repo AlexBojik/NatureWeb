@@ -1,0 +1,40 @@
+<div>
+  <mat-tab-group animationDuration="500ms">
+    <mat-tab label="Фильтр по региону">
+      <h4>Координаты региона</h4>
+      <mat-form-field class="w-100">
+        <textarea matInput [(ngModel)]="coordinates" style="min-height: 120px"></textarea>
+      </mat-form-field>
+      <button color="primary" mat-raised-button (click)="filterRegion()" mat-dialog-close>Применить</button>
+      <button color="primary" mat-raised-button style="margin-left: 20px"
+              (click)="drawFilter()" mat-dialog-close>Выбрать на карте</button>
+    </mat-tab>
+    <mat-tab *ngIf="showFilter" label="Фильтр по свойствам">
+      <h3>Фильтрация по свойствам</h3>
+      <mat-form-field class="example-chip-list">
+        <mat-chip-list #chipList aria-label="Выбор свойств">
+          <mat-chip
+            *ngFor="let field of fields"
+            (removed)="remove(field)">
+            {{field.name}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <input
+            placeholder="Свойства..."
+            #fieldInput
+            [formControl]="fieldCtrl"
+            [matAutocomplete]="auto"
+            [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event)">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+          <mat-option *ngFor="let field of filteredFields | async" [value]="field">
+            {{field.name}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <button color="primary" mat-raised-button (click)="filterFields()">Применить</button>
+    </mat-tab>
+  </mat-tab-group>
+</div>

@@ -3,7 +3,14 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [
+      "jasmine",
+      "arcgis-js-api",
+      "node"
+    ],
+    "typeRoots": [
+      "../node_modules/@types"
+    ]
   },
   "files": [
     "src/main.ts",

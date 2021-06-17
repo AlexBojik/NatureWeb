@@ -1,0 +1,30 @@
+<div class="dictionaries">
+  <mat-grid-list cols="3" rowHeight="100%">
+    <mat-grid-tile colspan="1" rowspan="1">
+      <div style="margin-left: 10px; overflow: auto">
+        <p>
+          <button mat-raised-button color="primary" (click)="add()">
+            <mat-icon>add</mat-icon>
+            Добавить справочник
+          </button>
+        </p>
+        <p *ngFor="let dict of dictionaries">
+          <button mat-button color="primary" (click)="onClick(dict)">
+            {{dict.name}}
+          </button>
+        </p>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="2" rowspan="1">
+      <p>
+        <button mat-raised-button color="primary" (click)="addValue()" [disabled]="!selected">
+          <mat-icon>add</mat-icon>
+          Добавить элемент
+        </button>
+      </p>
+      <mat-list>
+        <mat-list-item *ngFor="let value of values">{{value.name}}</mat-list-item>
+      </mat-list>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>

@@ -1,0 +1,10 @@
+<div mat-dialog-content>
+  <mat-form-field class="w-100">
+    <mat-label>Наименование</mat-label>
+    <input matInput [(ngModel)]="name" required>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button color="primary" mat-dialog-close>Отмена</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="name">Записать</button>
+</div>

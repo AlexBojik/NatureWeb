@@ -1,0 +1,54 @@
+<div class="container mat-elevation-z6">
+  <button mat-button color="primary" (click)="addNews()">
+    <mat-icon>add</mat-icon>
+    Добавить
+  </button>
+  <div class="table-container">
+    <table mat-table [dataSource]="news" class="example-table"
+           matSort matSortActive="created" matSortDisableClear matSortDirection="desc">
+
+      <ng-container matColumnDef="delete" stickyEnd>
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="element === current">
+            <button mat-icon-button (click)="edit(element)">
+              <mat-icon color="primary">edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="delete(element)">
+              <mat-icon style="color:red;">delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Created Column -->
+      <ng-container matColumnDef="created">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Добавлено
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.created | date : 'd MMMM y'}}</td>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Представление</th>
+        <td mat-cell *matCellDef="let row" [innerHTML]=row.description></td>
+      </ng-container>
+
+      <!-- Start Column -->
+      <ng-container matColumnDef="start">
+        <th mat-header-cell *matHeaderCellDef>Начало</th>
+        <td mat-cell *matCellDef="let row">{{row.start | date : 'd MMMM y'}}</td>
+      </ng-container>
+
+      <!-- End Column -->
+      <ng-container matColumnDef="end">
+        <th mat-header-cell *matHeaderCellDef>Окончание</th>
+        <td mat-cell *matCellDef="let row">{{formatedDate(row.end)}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (mouseenter)="current = row"></tr>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+.map-container {
+  height: 100%;
+  position: relative;
+}
+.example-container {
+  padding-top: 44px;
+  height: 100%;
+}
+.controls-right {
+  display: grid;
+  z-index: 1000;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+.margin-5 {
+  background: white;
+  margin: 5px;
+}
+.example-sidenav {
+  margin-top: 44px;
+}
+

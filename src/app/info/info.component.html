@@ -1,0 +1,32 @@
+<div style="max-height: calc(100vh - 66px); overflow: scroll">
+  <div *ngIf="x !== 0" style="text-align: center" class="mat-elevation-z3">
+    <h4 *ngIf="formatXY" style="line-height: 40px; margin: 5px" (click)="transform()">{{x}}, {{y}}</h4>
+    <h4 *ngIf="!formatXY" style="line-height: 40px; margin: 5px" (click)="transform()">{{grad(x)}}, {{grad(y)}}</h4>
+  </div>
+<!--  <div *ngIf="!user">-->
+    <div *ngFor="let obj of values(commonObjects)" style="margin: 10px; font-family: system-ui;  width: calc(25vw - 15px)">
+      <h4 style="display: flex; margin-top: 15px; margin-bottom: 15px; max-width: calc(25vw - 15px)">
+        <mat-icon *ngIf="obj.color" [ngStyle]="{'color': obj.color}">stop</mat-icon>
+        <img *ngIf="obj.symbol" [src]="'../assets/png/' + obj.symbol + '.png'" style="width: 24px; height: 24px; margin-right: 5px">
+        <label style="line-height: 24px;">{{obj.commonName}}</label>
+      </h4>
+      <div [innerHTML]="obj.commonDescription" style="display: block; margin: 10px"></div>
+      <mat-divider></mat-divider>
+    </div>
+<!--  </div>-->
+<!--  <div *ngIf="user">-->
+    <div *ngFor="let obj of objects" style="margin: 10px; width: calc(25vw - 15px); font-family: system-ui;">
+      <div style="display: flex; margin-top: 15px; margin-bottom: 15px;">
+        <mat-icon *ngIf="obj.layer.color" [ngStyle]="{'color': obj.layer.color}">stop</mat-icon>
+        <img *ngIf="obj.layer.symbol" [src]="'../assets/png/' + obj.layer.symbol + '.png'" style="width: 24px; height: 24px; margin-right: 5px">
+        <div style="width: calc(25vw - 103px); word-wrap: break-word"><strong>{{obj.name}}</strong></div>
+        <span class="example-spacer"></span>
+        <button mat-flat-button (click)="position(obj)"><mat-icon color="primary">place</mat-icon></button>
+      </div>
+      <div [innerHTML]="obj.description" style="display: block; margin: 10px"></div>
+      <button *ngIf="obj.geoJson" mat-button color="primary" (click)="openCoordinates(obj)">Координаты</button>
+      <button *ngIf="obj.geoJson.type == 'Polygon' && hasEditRole" mat-button color="primary" (click)="edit(obj)">Изменить границы</button>
+      <mat-divider></mat-divider>
+    </div>
+<!--  </div>-->
+</div>

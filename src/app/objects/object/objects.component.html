@@ -1,0 +1,32 @@
+<div mat-dialog-content>
+  <mat-tab-group mat-stretch-tabs>
+    <mat-tab label="Основное">
+      <mat-form-field>
+        <mat-label>Наименование</mat-label>
+        <input matInput [(ngModel)]="obj.name" required>
+      </mat-form-field>
+      <mat-form-field class="margin-left">
+        <mat-label>Тип</mat-label>
+        <mat-select [(ngModel)]="obj.type" required>
+          <mat-option *ngFor="let opt of types" [value]="opt.id">
+            {{opt.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <p>
+        <mat-form-field class="w-100">
+          <mat-label>Представление</mat-label>
+          <textarea matInput placeholder="" [(ngModel)]="obj.description" style="min-height: 70px"></textarea>
+        </mat-form-field>
+      </p>
+      <app-object-coordinates [object]="obj" #coordinateComponent></app-object-coordinates>
+    </mat-tab>
+    <mat-tab label="Дополнительные поля" *ngIf="hasFields">
+      <app-object-fields [object]="obj"></app-object-fields>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+<div mat-dialog-actions>
+  <button mat-button color="primary" mat-dialog-close>Отмена</button>
+  <button mat-raised-button color="primary" (click)="updateCoordinates()" [mat-dialog-close]="obj">Записать</button>
+</div>

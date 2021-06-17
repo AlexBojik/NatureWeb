@@ -1,0 +1,135 @@
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Geometry} from 'geojson';
+import {FieldValueObject} from './fields.service';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {environment} from '../../environments/environment';
+import {URL_FILTER, URL_UPDATE_COORDINATES} from '../../consts';
+
+export class GeoObject {
+  id: number;
+  layerId: number;
+  name: string;
+  type: string;
+  fields: FieldValueObject[];
+  geoJson: Geometry;
+  description: string;
+
+  constructor(layerId, name, type, coordinates, description = '', fields = []) {
+    this.layerId = layerId;
+    this.name = name;
+    this.type = type;
+    this.description = description;
+    this.fields = fields;
+    this.geoJson = this.geoJsonFrom(coordinates);
+  }
+
+  geoJsonFrom(coordinates): Geometry {
+    return {
+      type: this.type,
+      coordinates
+    } as Geometry;
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ObjectsService {
+  private _objects: Map<number, GeoObject> = new Map();
+  private _filtered = new BehaviorSubject<GeoObject[]>([]);
+  private _updateLayer = new BehaviorSubject<number>(0);
+  public readonly filtered$: Observable<GeoObject[]> = this._filtered.asObservable();
+  public readonly updateLayer$: Observable<number> = this._updateLayer.asObservable();
+
+  url = environment.baseUrl;
+  postUrl = this.url + 'object';
+  editing: number;
+  drawed: string;
+  layerToUpdate: number;
+
+  constructor(private _http: HttpClient) {
+  }
+
+  // TODO: Обработка сетевых статусов и выдача ошибок
+
+  getObjects(layerId): Promise<GeoObject[]> {
+    const url = this.url + 'layers/' + layerId;
+    return new Promise<GeoObject[]>((resolve) => {
+      try {
+        return this._http.get(url)
+          .toPromise()
+          .then(objects => {
+            const currentObjects = objects as GeoObject[];
+            currentObjects.forEach(obj => {
+              this._objects[obj.id] = obj;
+            });
+            resolve(currentObjects);
+          });
+      } catch (err) {
+        console.log(err);
+        return Promise.resolve(null);
+      }
+    });
+  }
+
+  deleteObject(id): Promise<any> {
+    const url = this.url + 'objects/' + id;
+    return this._http.delete(url).toPromise();
+  }
+
+  async postObject(object): Promise<{}> {
+    const url = this.url + 'objects/';
+    return this._http.post(url, object)
+      .toPromise()
+      .then(() => {
+        return {
+          success: true
+        };
+      })
+      .catch(err => {
+        return {
+          error: err.error
+        };
+      });
+  }
+
+  objectById(id: number): GeoObject {
+    return this._objects[id];
+  }
+
+  post(name, layerId, uid): void {
+    this._http.post(this.postUrl, {name, layer: layerId, uid})
+      .toPromise()
+      .then((id) => {
+        console.log(id);
+      });
+  }
+
+  filterObjects(type: number, str: string): void {
+    if (str !== '') {
+      this._http.post(URL_FILTER, {type, str})
+        .toPromise()
+        .then(objects => {
+          this._filtered.next(objects as GeoObject[]);
+        });
+    } else {
+      this._filtered.next([]);
+    }
+  }
+
+  saveDrawObject(): void {
+    if (!this.editing || !this.drawed) {
+      return;
+    }
+
+    this._http.put(URL_UPDATE_COORDINATES, {id: this.editing, wkt: this.drawed})
+      .toPromise()
+      .then(() => {
+        this._updateLayer.next(this.layerToUpdate);
+        this.layerToUpdate = 0;
+      });
+    this.editing = 0;
+    this.drawed = '';
+  }
+}

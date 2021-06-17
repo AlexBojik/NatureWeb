@@ -1,0 +1,11 @@
+<div>
+  <div *ngFor="let element of list">
+    <button mat-button color="primary" (click)="select(element)" style="width: 200px; text-align: left">
+      <mat-icon *ngIf="radioButtons">{{element.name === selected.name?'radio_button_checked':'radio_button_unchecked'}}</mat-icon>
+      <label [ngStyle]="{'font-weight': element.name === selected.name ? 'bold' : '500'}" >{{element.description}}</label>
+    </button>
+  </div>
+  <button *ngIf="!radioButtons" mat-raised-button color="primary" (click)="addBaseLayer()">
+    <mat-icon>add</mat-icon>Добавить
+  </button>
+</div>

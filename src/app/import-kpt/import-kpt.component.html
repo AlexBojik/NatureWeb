@@ -1,0 +1,6 @@
+<p>Выберите файл со списком кадастровых номеров</p>
+<input type="file" #xls accept=".xls, .xlsx"/>
+<p>Выберите файл КПТ</p>
+<input type="file" #xml accept=".xml" multiple="true"/>
+<mat-spinner *ngIf="loading"></mat-spinner>
+<button mat-raised-button color="primary" (click)="load(xls.files, xml.files)">Загрузить</button>
