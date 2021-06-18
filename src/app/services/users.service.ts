@@ -16,6 +16,8 @@ export class User {
   layers: boolean;
   dicts: boolean;
   messages: boolean;
+  info: boolean;
+  group: number;
 }
 
 export class UserGroups {
@@ -25,6 +27,7 @@ export class UserGroups {
   layers: boolean;
   dicts: boolean;
   messages: boolean;
+  info: boolean;
 }
 
 
@@ -80,7 +83,7 @@ export class UsersService {
   }
 
   getUsersWithGroup(userGroup: UserGroups): Observable<User[]> {
-    return this._http.get(URL_USER_LIST) as Observable<User[]>;
+    return this._http.get(URL_USER_LIST + '/' + userGroup.id) as Observable<User[]>;
   }
 
   updateUser(params): void {
@@ -91,7 +94,7 @@ export class UsersService {
     return this._http.get(URL_USER_GROUPS) as Observable<UserGroups[]>;
   }
 
-  postUserGroup(current: UserGroups): void {
-    this._http.post(URL_USER_GROUPS, current).subscribe();
+  postUserGroup(current: UserGroups): Observable<number> {
+    return this._http.post(URL_USER_GROUPS, current) as Observable<number>;
   }
 }

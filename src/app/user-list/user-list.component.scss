@@ -1,3 +1,24 @@
+.container {
+  position: relative;
+}
+
+.table-container {
+  position: relative;
+  min-height: 200px;
+  max-height: 400px;
+  overflow: scroll;
+}
+
 table {
   width: 100%;
+}
+
+.mat-column-created,
+.mat-column-start,
+.mat-column-end {
+  max-width: 48px;
+}
+
+.mat-column-delete {
+  width: 48px;
 }

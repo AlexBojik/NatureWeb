@@ -29,8 +29,12 @@ export class UsersComponent implements OnInit {
   private _updateUserGroups(): void {
     this.userGroups = [];
     const all = new UserGroups();
+    all.id = 0;
     all.name = 'Все пользователи';
     this.userGroups.push(all);
+    this._usrSrv.getUsersWithGroup(all).subscribe(users => {
+      this.users = users as User[];
+    });
     this._usrSrv.getUserGroups().subscribe( groups => {
       this.userGroups.push(...groups as UserGroups[]);
     });

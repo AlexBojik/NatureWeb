@@ -1,20 +1,31 @@
-<div>
-  <form [formGroup]="userForm" style="margin-top: 10px">
-    <div class="fields-container">
-      <mat-form-field>
-        <mat-label>ФИО</mat-label>
-        <input matInput placeholder="ФИО" formControlName="name" required>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Группа пользователя</mat-label>
-        <input matInput placeholder="Группа" formControlName="group" required>
-      </mat-form-field>
-    </div>
-  </form>
+<div mat-dialog-content>
   <p>
-    <button mat-raised-button color="primary" (click)="save()" [disabled]="!userForm.valid">
-      <mat-icon>save</mat-icon>
-      Сохранить
-    </button>
+    <mat-form-field style="width: 100%">
+      <mat-label>ФИО</mat-label>
+      <input #name matInput [(ngModel)]="current.name" required>
+    </mat-form-field>
   </p>
+  <p>
+    <mat-form-field style="width: 100%">
+      <mat-label>Группа пользователей</mat-label>
+      <mat-select [(ngModel)]="current.group" style="width: 100%">
+        <mat-option *ngFor="let ug of userGroups" [value]="ug.id">
+          <div (click)="changeGroup(ug)">
+            {{ug.name}}
+          </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+  <div class="example-section">
+    <mat-checkbox class="example-margin" [(ngModel)]="current.admin" color="primary">Администрирование</mat-checkbox>
+    <mat-checkbox class="example-margin" [(ngModel)]="current.layers" color="primary">Слои</mat-checkbox>
+    <mat-checkbox class="example-margin" [(ngModel)]="current.messages" color="primary">Обращения</mat-checkbox>
+    <mat-checkbox class="example-margin" [(ngModel)]="current.dicts" color="primary">Справочники</mat-checkbox>
+    <mat-checkbox class="example-margin" [(ngModel)]="current.info" color="primary">Доп. информация</mat-checkbox>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button color="primary" mat-dialog-close>Отмена</button>
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="!name.validity.valid" [mat-dialog-close]="current">Записать</button>
 </div>

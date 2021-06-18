@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {User, UsersService} from '../services/users.service';
+import {MatDialog} from '@angular/material/dialog';
+import {UserComponent} from '../user/user.component';
 
 @Component({
   selector: 'app-user-list',
@@ -7,16 +9,15 @@ import {User, UsersService} from '../services/users.service';
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent {
-  displayedColumns: string[] = ['name', 'phone', 'email', 'admin', 'layers', 'dicts', 'messages'];
-  dataSource = [];
+  displayedColumns: string[] = ['name', 'phone', 'email', 'admin', 'layers', 'dicts', 'messages', 'info', 'delete'];
+  @Input() dataSource;
   private _us: UsersService;
+  private _dialog: MatDialog;
+  current: User;
 
-  constructor(private us: UsersService) {
+  constructor(private us: UsersService, private dialog: MatDialog) {
+    this._dialog = dialog;
     this._us = us;
-    us.userList$.subscribe(value => {
-      this.dataSource = value;
-    });
-    us.getUsers();
   }
 
   toggleAdmin(user: User): void {
@@ -32,6 +33,16 @@ export class UserListComponent {
   }
 
   toggleDMessages(user: User): void {
+    this._us.updateUser(user);
+  }
+
+  edit(user: User): void {
+    this._dialog.open(UserComponent, {
+      data: user
+    });
+  }
+
+  toggleInfo(user: User): void {
     this._us.updateUser(user);
   }
 }

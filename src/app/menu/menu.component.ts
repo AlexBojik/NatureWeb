@@ -41,8 +41,8 @@ export class MenuComponent implements OnInit {
         this.showLayersButton = user.layers;
         this.showDictionaries = user.dicts;
         this.showAdmin = user.admin;
-        this.showMessages = user.messages;
-        this.showSearch = this.userSrv.hasSearchRole;
+        this.showMessages = user.admin;
+        this.showSearch = true;
         this.showUsers = user.admin;
       }
     });

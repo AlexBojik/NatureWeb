@@ -1,4 +1,4 @@
-<div mat-dialog-content>
+<div mat-dialog-content style="height: 600px">
   <mat-form-field>
     <mat-label>Наименование</mat-label>
     <input #name matInput [(ngModel)]="current.name" required>
@@ -8,7 +8,28 @@
     <mat-checkbox class="example-margin" [(ngModel)]="current.layers" color="primary">Слои</mat-checkbox>
     <mat-checkbox class="example-margin" [(ngModel)]="current.messages" color="primary">Обращения</mat-checkbox>
     <mat-checkbox class="example-margin" [(ngModel)]="current.dicts" color="primary">Справочники</mat-checkbox>
+    <mat-checkbox class="example-margin" [(ngModel)]="current.info" color="primary">Доп. информация</mat-checkbox>
   </div>
+  <mat-form-field style="width: 100%;">
+    <input type="text" placeholder="Выберите пользователя" aria-label="Выберите пользователя" matInput [matAutocomplete]="auto" [formControl]="userControl">
+    <mat-hint>Введите текст для поиска Пользователя</mat-hint>
+  </mat-form-field>
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+    <mat-option *ngFor="let user of filteredOptions | async" [value]="user">
+      <div (click)="optionClicked($event, user)">
+        {{user.name.toUpperCase()}}
+      </div>
+    </mat-option>
+  </mat-autocomplete>
+  <br>
+  <mat-list dense>
+    <div mat-subheader>Выбранные пользователи</div>
+    <mat-list-item *ngIf="users.size === 0">(Нет выбранных пользователей)</mat-list-item>
+    <mat-list-item *ngFor="let user of users">
+      <mat-icon mat-list-icon>person</mat-icon>
+      {{ user.name.toUpperCase() }}
+    </mat-list-item>
+  </mat-list>
 </div>
 <div mat-dialog-actions>
   <button mat-button color="primary" mat-dialog-close>Отмена</button>
