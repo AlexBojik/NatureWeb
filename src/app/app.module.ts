@@ -65,7 +65,7 @@ import {WarningComponent} from './warning/warning.component';
 import {InfoComponent} from './info/info.component';
 import {FilterComponent} from './filter/filter.component';
 import {MessagesComponent} from './messages/messages.component';
-import {MessageComponent} from './message/message.component';
+import {MessageComponent} from './messages/message/message.component';
 import {MatBadgeModule} from '@angular/material/badge';
 import {ImagesComponent} from './images/images.component';
 import {CoordinateComponent} from './coordinate/coordinate.component';

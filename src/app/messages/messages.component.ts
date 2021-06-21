@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Message, MessageService} from '../services/message.service';
 import {MatDialog} from '@angular/material/dialog';
-import {MessageComponent} from '../message/message.component';
+import {MessageComponent} from './message/message.component';
 
 
 @Component({

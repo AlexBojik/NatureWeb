@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Geometry} from 'geojson';
 import {FieldValueObject} from './fields.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {URL_FILTER, URL_UPDATE_COORDINATES} from '../../consts';
+import {UsersService} from './users.service';
 
 export class GeoObject {
   id: number;
@@ -48,7 +49,8 @@ export class ObjectsService {
   drawed: string;
   layerToUpdate: number;
 
-  constructor(private _http: HttpClient) {
+  constructor(private _http: HttpClient,
+              private _usrSrv: UsersService) {
   }
 
   // TODO: Обработка сетевых статусов и выдача ошибок
@@ -108,7 +110,8 @@ export class ObjectsService {
 
   filterObjects(type: number, str: string): void {
     if (str !== '') {
-      this._http.post(URL_FILTER, {type, str})
+      const headers = new HttpHeaders({Token: this._usrSrv.token.value});
+      this._http.post(URL_FILTER, {type, str}, {headers})
         .toPromise()
         .then(objects => {
           this._filtered.next(objects as GeoObject[]);

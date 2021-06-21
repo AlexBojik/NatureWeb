@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {GeoObject, ObjectsService} from '../services/objects.service';
 import {Field, FieldsService} from '../services/fields.service';
 import {Color} from '@angular-material-components/color-picker';
 import {URL_LAYER_LIST} from '../../consts';
+import {UsersService} from '../services/users.service';
 
 export class Layer {
   group?: number;
@@ -94,21 +95,26 @@ export class LayersService {
 
   constructor(private _http: HttpClient,
               private _objSrv: ObjectsService,
-              private _fieldSrv: FieldsService) {
+              private _fieldSrv: FieldsService,
+              private _usrSrv: UsersService) {
   }
 
   updateLayers(): void {
-    this._http.get(URL_LAYER_LIST).subscribe(gl => {
-      if (gl != null) {
-        const layers = gl as Layer[];
-        layers.forEach(l => {
-          l.layers.forEach(cl => {
-            this._layersMap['layer' + cl.id] = cl;
+    const headers = new HttpHeaders({Token: this._usrSrv.token.value});
+
+    this._http
+      .get<Layer[]>(URL_LAYER_LIST, {headers})
+      .subscribe(gl => {
+        if (gl != null) {
+          const layers = gl;
+          layers.forEach(l => {
+            l.layers.forEach(cl => {
+              this._layersMap['layer' + cl.id] = cl;
+            });
           });
-        });
-        this._layers.next(layers);
-      }
-    });
+          this._layers.next(layers);
+        }
+      });
   }
 
   getLayerById(id): Layer {

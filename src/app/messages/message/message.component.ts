@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Message} from '../services/message.service';
+import {Message} from '../../services/message.service';
 import {MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
-import {ImagesComponent} from '../images/images.component';
-import {environment} from '../../environments/environment';
+import {ImagesComponent} from '../../images/images.component';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-message',
