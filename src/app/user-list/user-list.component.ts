@@ -1,39 +1,44 @@
-import {Component, Input} from '@angular/core';
-import {User, UsersService} from '../services/users.service';
+import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
+import {User, UserGroups, UsersService} from '../services/users.service';
 import {MatDialog} from '@angular/material/dialog';
 import {UserComponent} from '../user/user.component';
+import {MatSort} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss']
 })
-export class UserListComponent {
+export class UserListComponent implements AfterViewInit {
   displayedColumns: string[] = ['name', 'phone', 'email', 'admin', 'layers', 'dicts', 'messages', 'info', 'delete'];
-  @Input() dataSource;
-  private _us: UsersService;
+  dataSource = new MatTableDataSource([]);
+  @Input() userGroup: UserGroups;
   private _dialog: MatDialog;
   current: User;
 
-  constructor(private us: UsersService, private dialog: MatDialog) {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor(private _usrSrv: UsersService, private dialog: MatDialog) {
     this._dialog = dialog;
-    this._us = us;
   }
 
   toggleAdmin(user: User): void {
-    this._us.updateUser(user);
+    this._usrSrv.updateUser(user);
   }
 
   toggleLayers(user: User): void {
-    this._us.updateUser(user);
+    this._usrSrv.updateUser(user);
   }
 
   toggleDicts(user: User): void {
-    this._us.updateUser(user);
+    this._usrSrv.updateUser(user);
   }
 
   toggleDMessages(user: User): void {
-    this._us.updateUser(user);
+    this._usrSrv.updateUser(user);
   }
 
   edit(user: User): void {
@@ -43,6 +48,13 @@ export class UserListComponent {
   }
 
   toggleInfo(user: User): void {
-    this._us.updateUser(user);
+    this._usrSrv.updateUser(user);
+  }
+
+  ngAfterViewInit(): void {
+    this._usrSrv.getUsersWithGroup(this.userGroup).subscribe(users => {
+      this.dataSource = new MatTableDataSource(users);
+      this.dataSource.sort = this.sort;
+    });
   }
 }

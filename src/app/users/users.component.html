@@ -9,7 +9,7 @@
           </button>
         </p>
         <p *ngFor="let userGroup of userGroups">
-          <button mat-button color="primary" (click)="onClick(userGroup)">
+          <button mat-button color="primary" (click)="onClick(userGroup); list.userGroup = userGroup; list.ngAfterViewInit()">
             {{userGroup.name}}
             <mat-icon *ngIf="userGroup === current && userGroup.id > 0" color="primary" (click)="edit(userGroup)">edit</mat-icon>
           </button>
@@ -17,7 +17,7 @@
       </div>
     </mat-grid-tile>
     <mat-grid-tile colspan="3" rowspan="1">
-      <app-user-list [dataSource]="users"></app-user-list>
+      <app-user-list #list [userGroup]="current"></app-user-list>
     </mat-grid-tile>
   </mat-grid-list>
 </div>
