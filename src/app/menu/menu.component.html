@@ -12,7 +12,7 @@
     <mat-icon class="margin-5">admin_panel_settings</mat-icon>Администрирование</button>
   <button mat-button *ngIf="showUsers" (click)="showUsersComponent()">
     <mat-icon class="margin-5">people</mat-icon>Пользователи</button>
-  <div *ngIf="showSearch">
+  <div>
     <mat-form-field style="width: 300px">
       <input #filter type="text" matInput style="font-size: small" (keyup)="$event.key == 'Enter' ? search(filter.value) : null">
     </mat-form-field>

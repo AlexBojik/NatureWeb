@@ -1,4 +1,4 @@
-<div style="max-height: calc(100vh - 66px); overflow: scroll">
+<div>
   <div *ngIf="x !== 0" style="text-align: center" class="mat-elevation-z3">
     <h4 *ngIf="formatXY" style="line-height: 40px; margin: 5px" (click)="transform()">{{x}}, {{y}}</h4>
     <h4 *ngIf="!formatXY" style="line-height: 40px; margin: 5px" (click)="transform()">{{grad(x)}}, {{grad(y)}}</h4>

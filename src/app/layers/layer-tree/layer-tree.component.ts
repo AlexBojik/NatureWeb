@@ -24,6 +24,7 @@ export class LayerTreeComponent implements OnInit {
     this.treeControl = new NestedTreeControl<Layer>(this.getChildren);
 
     layersSrv.layers$.subscribe(tree => {
+      this.dataSource.data = null;
       this.dataSource.data = tree;
     });
 

@@ -12,7 +12,7 @@ import {
   DEFAULT,
   FILL, FILTER,
   GEOJSON,
-  IMAGES,
+  IMAGES, LABEL,
   LAYER, LINE,
   LOCATE, POINTS,
   RASTER,
@@ -82,6 +82,7 @@ export class MapService {
           default: {type: RASTER, tiles: [environment.defaultBase], tileSize: TILE_SIZE},
           // names: {type: RASTER, tiles: [environment.defaultNames], tileSize: TILE_SIZE},
         },
+        glyphs: 'http://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
         layers: [{id: DEFAULT, type: RASTER, source: DEFAULT}],
       },
       center: CENTER,
@@ -211,6 +212,9 @@ export class MapService {
       if (this.map.getLayer(layerId + LINE) !== undefined) {
         this.map.removeLayer(layerId + LINE);
       }
+      if (this.map.getLayer(layerId + LABEL) !== undefined) {
+        this.map.removeLayer(layerId + LABEL);
+      }
     });
   }
 
@@ -241,7 +245,8 @@ export class MapService {
 
   private _setMouseListeners(source, layer): void {
     let hoveredId = null;
-    this.map.on('mouseenter', layer, (e) => {
+    this.map.on('mousemove', layer, (e) => {
+      this._setHoverFeature(source, hoveredId, false);
       hoveredId = this._addHoverProperties(e, source);
     });
     this.map.on('mouseleave', layer, () => {
@@ -294,6 +299,7 @@ export class MapService {
       },
       filter: ['==', '$type', 'Polygon'],
     });
+
     if (layer.lineWidth !== 0) {
       this.map.addLayer({
         id: layerId + LINE,
@@ -320,6 +326,17 @@ export class MapService {
           'icon-size': 0.5
         }
       });
+      // this.map.addLayer({
+      //   id: layerId + LABEL,
+      //   type: 'symbol',
+      //   source: layerId + CLUSTER,
+      //   layout: {
+      //     'text-field': ['get', 'name'],
+      //     'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+      //     'text-radial-offset': 0.5,
+      //     'text-font': ['Open Sans Bold'],
+      //   }
+      // });
     }
   }
 

@@ -1,48 +1,33 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {GeoObject, ObjectsService} from '../services/objects.service';
-import {Field, FieldsService} from '../services/fields.service';
+import {ObjectsService} from '../services/objects.service';
+import {FieldsService} from '../services/fields.service';
 import {Color} from '@angular-material-components/color-picker';
 import {URL_LAYER_LIST} from '../../consts';
 import {UsersService} from '../services/users.service';
 
 export class Layer {
-  group?: number;
   id: number;
   name: string;
   type?: string;
+  group?: number;
   url?: string;
   color?: string;
   commonName?: string;
   commonDescription?: string;
+  warning?: boolean;
   symbol?: string;
+  cluster?: boolean;
+  order?: number;
+  lineWidth?: number;
+  lineColor?: string;
+  limitation?: boolean;
   icon?: string;
   layers?: Layer[];
   isGroup: boolean;
-  cluster: boolean;
-  lineWidth: number;
-  lineColor: string;
   col: Color;
-}
-
-
-export class LayerOld {
-  id: number;
-  name: string;
-  level: number;
-  type: string;
-  params: string;
-  icon: string;
-  visible: boolean;
-  children: Layer[];
-  objects: GeoObject[];
-  color: string;
-  commonName: string;
-  commonDescription: string;
-  fields: Field[];
-  col: Color;
-  symbol: string;
+  col1: Color;
 }
 
 @Injectable({
@@ -121,7 +106,16 @@ export class LayersService {
     return this._layersMap[id];
   }
 
+  updateTree(): void {
+    const currentTree = this._layers.value;
+    this._layers.next(currentTree);
+  }
+
   postLayer(layer): Promise<any> {
-    return this._http.post(URL_LAYER_LIST, layer).toPromise();
+    if (layer.id === undefined) {
+      return this._http.post(URL_LAYER_LIST, layer).toPromise();
+    } else {
+      return this._http.put(URL_LAYER_LIST, layer).toPromise();
+    }
   }
 }

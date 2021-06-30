@@ -1,61 +1,124 @@
 <div *ngIf="isSelected">
   <mat-tab-group>
-    <mat-tab label="Объекты" *ngIf="isFillLayer">
-      <div class="w-100">
-        <app-object-table></app-object-table>
-      </div>
-    </mat-tab>
     <mat-tab label="Свойства">
-      <form [formGroup]="layerForm" style="margin-top: 10px">
+      <form [formGroup]="layerForm" style="margin-top: 10px; margin-left: 10px">
         <div class="fields-container">
-          <mat-form-field style="width: 50%">
+          <mat-form-field style="width: 300px">
             <mat-label>Наименование</mat-label>
             <input matInput placeholder="Наименование" formControlName="name" required>
           </mat-form-field>
-          <mat-form-field *ngIf="isFillLayer" style="width: 30%">
-            <mat-label>Цвет</mat-label>
-            <input matInput [ngxMatColorPicker]="picker" formControlName="col" required>
-            <ngx-mat-color-toggle matSuffix [for]="picker"></ngx-mat-color-toggle>
-            <ngx-mat-color-picker #picker></ngx-mat-color-picker>
+          <mat-form-field style="width: 300px" *ngIf="!selected.isGroup">
+            <mat-label>Наименование для представления</mat-label>
+            <input matInput placeholder="Наименование для представления" formControlName="commonName">
           </mat-form-field>
-          <mat-form-field *ngIf="isFillLayer" style="width: 30%">
-            <mat-label>Цвет границы</mat-label>
-            <input matInput [ngxMatColorPicker]="picker1" formControlName="col1" required>
-            <ngx-mat-color-toggle matSuffix [for]="picker1"></ngx-mat-color-toggle>
-            <ngx-mat-color-picker #picker1></ngx-mat-color-picker>
-          </mat-form-field>
+          <div *ngIf="!selected.isGroup">
+            <mat-form-field style="width: 300px">
+              <mat-label>Тип слоя</mat-label>
+              <mat-select required formControlName="type">
+                <mat-option *ngFor="let type of types" [value]="type.id">
+                  {{type.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field style="width: 300px">
+              <mat-label>Группа</mat-label>
+              <mat-select required formControlName="group">
+                <mat-option *ngFor="let group of groups" [value]="group.id">
+                  {{group.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div *ngIf="isObjectsLayer">
+              <mat-form-field style="width: 600px">
+                <mat-label>Описание</mat-label>
+                <textarea matInput placeholder="Описание можно оформлять в формате HTML" formControlName="commonDescription" style="height: 100px"></textarea>
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field style="width: 600px">
+                <mat-label>Адрес обновления</mat-label>
+                <textarea matInput placeholder="Если слой импортируется из смежной системы укажите адрес импорта" formControlName="url" style="height: 60px"></textarea>
+              </mat-form-field>
+            </div>
+            <mat-form-field style="width: 300px">
+              <mat-label>Цвет</mat-label>
+              <input matInput [ngxMatColorPicker]="picker" formControlName="col">
+              <button mat-icon-button matSuffix color="warn" (click)="clearCol()">
+                <mat-icon>clear</mat-icon>
+              </button>
+              <ngx-mat-color-toggle matSuffix [for]="picker"></ngx-mat-color-toggle>
+              <ngx-mat-color-picker #picker></ngx-mat-color-picker>
+            </mat-form-field>
+            <mat-form-field style="width: 300px" *ngIf="isObjectsLayer">
+              <mat-label>Цвет границы</mat-label>
+              <input matInput [ngxMatColorPicker]="picker1" formControlName="col1">
+              <button mat-icon-button matSuffix color="warn" (click)="clearCol1()">
+                <mat-icon>clear</mat-icon>
+              </button>
+              <ngx-mat-color-toggle matSuffix [for]="picker1"></ngx-mat-color-toggle>
+              <ngx-mat-color-picker #picker1></ngx-mat-color-picker>
+            </mat-form-field>
+            <mat-form-field *ngIf="isObjectsLayer">
+              <mat-label>Ширина границы</mat-label>
+              <input matInput type="number" placeholder="0" formControlName="lineWidth" min="0">
+            </mat-form-field>
+            <div *ngIf="isObjectsLayer">
+              <mat-checkbox formControlName="warning" color="primary">Предупреждать при попадании в зону</mat-checkbox><br>
+              <mat-checkbox formControlName="cluster" color="primary">Отображать иконки для областей</mat-checkbox><br>
+              <mat-checkbox formControlName="limitation" color="primary">Ограничить слой только для сотрудников</mat-checkbox><br>
+            </div>
+            <br>
+            <mat-form-field>
+              <mat-label>Порядок сортировки</mat-label>
+              <input matInput type="number" placeholder="0" formControlName="order" min="0">
+            </mat-form-field>
+            <mat-form-field style="width: 300px">
+              <mat-label>Иконка</mat-label>
+              <mat-select formControlName="symbol">
+                <mat-option *ngFor="let icon of icons" [value]="icon.id">
+                  <img src="../../../assets/png/{{icon.id}}.png" width="30px" height="30px" alt="" style="margin-top: 20px">
+                  <span style="position: absolute; margin: 10px">{{icon.name}}</span>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         </div>
       </form>
-      <mat-list role="list" *ngIf="isFillLayer">
-        <div mat-subheader>Состав дополнительных полей</div>
-        <mat-list-item *ngFor="let field of fields" role="listitem" class="fields-container">
-          <mat-form-field style="width: 40%">
-            <mat-label>Наименование</mat-label>
-            <input matInput placeholder="Наименование поля" [(ngModel)]="field.name" required>
-          </mat-form-field>
-          <mat-form-field style="width: 40%">
-            <mat-label>Тип поля</mat-label>
-            <mat-select [(ngModel)]="field.type" required>
-              <mat-option *ngFor="let dict of dictionaries" [value]="dict.id">
-                {{dict.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <button mat-icon-button style="color:red;" (click)="deleteField(field)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-list-item>
-        <button mat-button color="primary" (click)="addField()">
-          <mat-icon>add</mat-icon>
-          Добавить поле
-        </button>
-      </mat-list>
+<!--      <mat-list role="list" *ngIf="isFillLayer">-->
+<!--        <div mat-subheader>Состав дополнительных полей</div>-->
+<!--        <mat-list-item *ngFor="let field of fields" role="listitem" class="fields-container">-->
+<!--          <mat-form-field style="width: 40%">-->
+<!--            <mat-label>Наименование</mat-label>-->
+<!--            <input matInput placeholder="Наименование поля" [(ngModel)]="field.name" required>-->
+<!--          </mat-form-field>-->
+<!--          <mat-form-field style="width: 40%">-->
+<!--            <mat-label>Тип поля</mat-label>-->
+<!--            <mat-select [(ngModel)]="field.type" required>-->
+<!--              <mat-option *ngFor="let dict of dictionaries" [value]="dict.id">-->
+<!--                {{dict.name}}-->
+<!--              </mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
+<!--          <button mat-icon-button style="color:red;" (click)="deleteField(field)">-->
+<!--            <mat-icon>delete</mat-icon>-->
+<!--          </button>-->
+<!--        </mat-list-item>-->
+<!--        <button mat-button color="primary" (click)="addField()">-->
+<!--          <mat-icon>add</mat-icon>-->
+<!--          Добавить поле-->
+<!--        </button>-->
+<!--      </mat-list>-->
       <p>
-        <button mat-raised-button color="primary" (click)="save()" [disabled]="!layerForm.valid">
+        <button mat-raised-button color="primary" (click)="save()" [disabled]="!layerForm.valid || selected.isGroup">
           <mat-icon>save</mat-icon>
           Сохранить
         </button>
       </p>
+    </mat-tab>
+    <mat-tab label="Объекты" *ngIf="isObjectsLayer">
+      <div class="w-100">
+        <app-object-table></app-object-table>
+      </div>
     </mat-tab>
   </mat-tab-group>
 </div>

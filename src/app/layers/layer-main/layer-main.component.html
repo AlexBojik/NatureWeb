@@ -1,6 +1,12 @@
 <div class="layers">
   <mat-grid-list cols="4" rowHeight="100%">
     <mat-grid-tile colspan="1" rowspan="1">
+      <p>
+        <button mat-button color="primary" (click)="add()" [disabled]="!(selected && selected.isGroup)">
+          <mat-icon>add</mat-icon>
+          Добавить слой
+        </button>
+      </p>
       <app-tree-layers [checkbox]="false"></app-tree-layers>
     </mat-grid-tile>
     <mat-grid-tile colspan="3" rowspan="1">

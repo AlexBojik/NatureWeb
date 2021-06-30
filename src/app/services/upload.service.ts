@@ -219,25 +219,30 @@ export class UploadService {
               }
             }
           } while (match);
-        } else if (!!currentField) {
-          if (!str[i]) {
-            continue;
-          }
-          if (currentField.type > 0) {
-            let opt = currentField.options.find(o => o.name === str[i]);
-            if (!opt) {
-              const value = new Value();
-              value.name = str[i];
-              value.dictId = currentField.type;
-              await this._dictSrv.postValue(value)
-                .then((res) => {
-                  opt = {id: res, name: str[i]};
-                  currentField.options.push(opt);
-                });
+        } else if (currentHead === 'Координаты (десятичные)') {
+          lat = parseFloat(str[i]);
+          lon = parseFloat(str[++i]);
+        } else {
+          if (!!currentField) {
+            if (!str[i]) {
+              continue;
             }
-            currentObj.fields.push({fieldId: currentField.id, valueNum: opt.id});
-          } else {
-            currentValue.push(str[i]);
+            if (currentField.type > 0) {
+              let opt = currentField.options.find(o => o.name === str[i]);
+              if (!opt) {
+                const value = new Value();
+                value.name = str[i];
+                value.dictId = currentField.type;
+                await this._dictSrv.postValue(value)
+                  .then((res) => {
+                    opt = {id: res, name: str[i]};
+                    currentField.options.push(opt);
+                  });
+              }
+              currentObj.fields.push({fieldId: currentField.id, valueNum: opt.id});
+            } else {
+              currentValue.push(str[i]);
+            }
           }
         }
       }

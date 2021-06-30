@@ -13,22 +13,66 @@ import {Color} from '@angular-material-components/color-picker';
 })
 export class LayerDetailComponent implements OnInit {
   isSelected = false;
-  isFillLayer = false;
+  isObjectsLayer = false;
   selected: Layer;
   layerForm: FormGroup;
   dictionaries: Dictionary[];
   fields: Field[];
+  types = [
+    {
+      id: 'raster',
+      name: 'Растровый',
+    }, {
+      id: 'fill',
+      name: 'Заполненнные объекты',
+    }, {
+      id: 'stroke',
+      name: 'Только границы',
+    }
+  ];
+  groups: Layer[] = [];
+  icons = [
+    {
+     id: 'cont',
+     name: 'Зеленый портфель'
+    }, {
+      id: 'dam',
+      name: 'Плотина'
+    }, {
+      id: 'fish',
+      name: 'Рыба'
+    }, {
+      id: 'greendozer',
+      name: 'Зеленый бульдозер'
+    }, {
+      id: 'pit',
+      name: 'Синий кран'
+    }, {
+      id: 'reddozer',
+      name: 'Красный бульдозер'
+    }, {
+      id: 'rekr',
+      name: 'Зонтик'
+    }, {
+      id: 'resh',
+      name: 'Оранжевый портфель'
+    }, {
+      id: 'san',
+      name: 'Зона санитарной охраны'
+    }, {
+      id: 'tech',
+      name: 'Красный кран'
+    }];
 
-  _hexToRgb(hex): [number, number, number] {
+  _hexToRgb(hex): Color {
     try {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return [
+      return new Color(
         parseInt(result[1], 16),
         parseInt(result[2], 16),
-        parseInt(result[3], 16)
-      ];
+        parseInt(result[3], 16));
     } catch (e) {
-      return [0, 0, 0];
+      return null;
     }
   }
 
@@ -37,17 +81,20 @@ export class LayerDetailComponent implements OnInit {
               private fb: FormBuilder,
               private _snackBar: MatSnackBar) {
     layersSrv.selected$.subscribe(layer => {
-      // TODO: fields and color
+      // TODO: fields
       this.isSelected = false;
       if (layer) {
         this.selected = layer;
         // this.fields = this.selected.fields;
-        this.isFillLayer = this.selected.type === 'fill';
+        this.isObjectsLayer = this.selected.type !== 'raster';
         this.isSelected = true;
-        const [r, g, b] = this._hexToRgb(this.selected.color);
-        this.selected.col = new Color(r, g, b);
+        this.selected.col = this._hexToRgb(this.selected.color);
+        this.selected.col1 = this._hexToRgb(this.selected.lineColor);
         this.layerForm = this.fb.group(this.selected);
       }
+    });
+    layersSrv.layers$.subscribe(layers => {
+      this.groups = layers.filter(l => l.isGroup);
     });
     dictSrv.dictionaries$.subscribe(dictionaries => {
       this.dictionaries = [{id: 0, name: 'Строка'}, {id: -1, name: 'Флаг'}, {id: -2, name: 'Число'}];
@@ -64,13 +111,24 @@ export class LayerDetailComponent implements OnInit {
 
   save(): void {
     const current = this.layerForm.value;
-    this.selected.name = current.name;
-    if (this.isFillLayer) {
-      this.selected.color = '#' + current.col.hex;
+
+    if (current.col === null) {
+      current.color = '';
+    } else {
+      current.color = '#' + current.col.hex;
     }
-    this.layersSrv.postLayer(this.selected)
+
+    if (current.col1 === null) {
+      current.lineColor = '';
+    } else {
+      current.lineColor = '#' + current.col1.hex;
+    }
+
+    this.layersSrv.postLayer(current)
       .then(() => {
         this._snackBar.open('Успешно сохранено!', 'OK', {duration: 500});
+        this.layersSrv.updateLayers();
+        this.layersSrv.selected = null;
       })
       .catch(() => {
         this._snackBar.open('Ошибка сохраненения!', 'OK', {duration: 500});
@@ -82,5 +140,13 @@ export class LayerDetailComponent implements OnInit {
     if (index > -1) {
       this.fields.splice(index, 1);
     }
+  }
+
+  clearCol(): void {
+    this.layerForm.patchValue({col: null});
+  }
+
+  clearCol1(): void {
+    this.layerForm.patchValue({col1: null});
   }
 }

@@ -15,14 +15,16 @@
 }
 
 .warning-left {
-  display: grid;
-  z-index: 1000;
+  //display: grid;
+  //z-index: 1000;
   position: absolute;
   top: 5px;
   left: 5px;
   width: 25vw;
+  overflow-x: hidden;
+  overflow-y: scroll;
   max-height: calc(100vh - 66px);
-  overflow: scroll;
+  //overflow: scroll;
   //height: 200px;
   background: white;
 }

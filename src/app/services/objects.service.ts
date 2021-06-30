@@ -81,7 +81,7 @@ export class ObjectsService {
   }
 
   async postObject(object): Promise<{}> {
-    const url = this.url + 'objects/';
+    const url = this.url + 'objects';
     return this._http.post(url, object)
       .toPromise()
       .then(() => {
