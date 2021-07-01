@@ -12,6 +12,7 @@ export class WarningComponent implements OnInit {
   constructor(newsSrv: NewsService) {
     newsSrv.getNews();
     newsSrv.newsList$.subscribe(news => {
+      news.sort((a, b) => a.start < b.start ? 1 : -1);
       this.news = news;
     });
   }
