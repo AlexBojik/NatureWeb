@@ -10,6 +10,7 @@ export const CLUSTER = 'cluster';
 export const FILTER = 'filter';
 export const LINE = 'line';
 export const LABEL = 'label';
+export const MESSAGE_STATUSES = ['Новое', 'Отправлено', 'В работе', 'Завершено'];
 export const URL_LAYER_LIST = environment.baseUrl + 'layers';
 export const URL_FILTER = environment.baseUrl + 'filter';
 export const URL_FIELDS = environment.baseUrl + 'fields';

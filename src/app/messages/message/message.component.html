@@ -14,11 +14,25 @@
         {{messageStatus[status]}}
       </mat-option>
     </mat-select>
-  </mat-form-field><br>
+  </mat-form-field>
+  <mat-form-field class="w-100">
+    <mat-label>Комментарий: </mat-label>
+    <textarea matInput placeholder="Комментарий к обращению" [(ngModel)]="msg.comment" style="height: 100px"></textarea>
+  </mat-form-field>
+  <mat-form-field class="w-100" *ngIf="msg.employerName !== ''">
+    <mat-label>Ответственный: </mat-label>
+    <input matInput disabled [value]="msg.employerName">
+  </mat-form-field>
+  <br>
   <mat-spinner *ngIf="!msg.imageLoads"></mat-spinner>
   <div *ngIf="msg.imageLoads">
     <button *ngFor="let img of msg.images" mat-button (click)="openImages(img)">
       <img src="{{imageCatalog}}{{img}}" alt="" style="width: 100px; height: 100px">
     </button>
   </div>
+  <br>
+  <button mat-raised-button color="primary" (click)="save()" matDialogClose>
+    <mat-icon>save</mat-icon>
+    Сохранить
+  </button>
 </div>

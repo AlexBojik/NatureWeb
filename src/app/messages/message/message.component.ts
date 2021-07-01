@@ -1,8 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Message} from '../../services/message.service';
+import {Message, MessageService} from '../../services/message.service';
 import {MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {ImagesComponent} from '../../images/images.component';
 import {environment} from '../../../environments/environment';
+import {MESSAGE_STATUSES} from '../../../consts';
 
 @Component({
   selector: 'app-message',
@@ -10,12 +11,13 @@ import {environment} from '../../../environments/environment';
   styleUrls: ['./message.component.scss']
 })
 export class MessageComponent implements OnInit {
-  messageStatus = ['Новое', 'В работе', 'Обратная связь', 'Решено', 'Отклонено'];
+  messageStatus = MESSAGE_STATUSES;
 
   msg: Message;
   imageCatalog = environment.baseUrl + 'image/';
   constructor(@Inject(MAT_DIALOG_DATA) public data: {msg: Message},
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private _msgSrv: MessageService) {
     this.msg = data.msg;
   }
 
@@ -26,5 +28,9 @@ export class MessageComponent implements OnInit {
     this.dialog.open(ImagesComponent, {
       data: {image: img}
     });
+  }
+
+  save(): void {
+    this._msgSrv.putMessage(this.msg);
   }
 }

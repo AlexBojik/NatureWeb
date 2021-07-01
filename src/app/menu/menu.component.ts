@@ -41,7 +41,7 @@ export class MenuComponent implements OnInit {
         this.showLayersButton = user.layers;
         this.showDictionaries = user.dicts;
         this.showAdmin = user.admin;
-        this.showMessages = user.admin;
+        this.showMessages = user.messages;
         this.showSearch = true;
         this.showUsers = user.admin;
       }
@@ -69,7 +69,9 @@ export class MenuComponent implements OnInit {
   }
 
   showWarning(): void {
-    this.dialog.open(WarningComponent);
+    this.dialog.open(WarningComponent, {
+      maxHeight: '90vh'
+    });
   }
 
   showAuth(): void {

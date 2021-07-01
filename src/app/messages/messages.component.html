@@ -1,13 +1,36 @@
-<div class="margin-top">
-  <button mat-button color="primary" (click)="sendMessages()">
-    <mat-icon>send</mat-icon>
-    Отправить сообщения
-  </button>
+<div class="messages-tab">
+  <div>
+    <button mat-button color="primary" (click)="sendMessages()" *ngIf="canSendMessages()">
+      <mat-icon>send</mat-icon>
+      Отправить сообщения
+    </button>
+    <button *ngIf="!newFilter" mat-button color="primary" (click)="toggleNew()">Новые</button>
+    <button *ngIf="newFilter" mat-raised-button color="primary" (click)="toggleNew()">Новые</button>
+    <button *ngIf="!sendFilter" mat-button color="primary" (click)="toggleSend()">Отправленные</button>
+    <button *ngIf="sendFilter" mat-raised-button color="primary" (click)="toggleSend()">Отправленные</button>
+    <button *ngIf="!workFilter" mat-button color="primary" (click)="toggleWork()">В работе</button>
+    <button *ngIf="workFilter" mat-raised-button color="primary" (click)="toggleWork()">В работе</button>
+    <button *ngIf="!closeFilter" mat-button color="primary" (click)="toggleClose()">Завершенные</button>
+    <button *ngIf="closeFilter" mat-raised-button color="primary" (click)="toggleClose()">Завершенные</button>
+    <button *ngIf="!myFilter" mat-button color="primary" (click)="toggleMy()">Мои обращения</button>
+    <button *ngIf="myFilter" mat-raised-button color="primary" (click)="toggleMy()">Мои обращения</button>
+  </div>
+
   <mat-spinner *ngIf="updating"></mat-spinner>
-  <table mat-table [dataSource]="messages" class="messages" *ngIf="!updating">
+  <table mat-table [dataSource]="filteredMessages" class="messages" *ngIf="!updating">
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> # </th>
       <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="time">
+      <th mat-header-cell *matHeaderCellDef> Дата создания </th>
+      <td mat-cell *matCellDef="let element"> {{date(element.time)}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="end">
+      <th mat-header-cell *matHeaderCellDef> Дата завершения </th>
+      <td mat-cell *matCellDef="let element"> {{date(element.end)}} </td>
     </ng-container>
 
     <ng-container matColumnDef="userName">
@@ -15,14 +38,19 @@
       <td mat-cell *matCellDef="let element"> {{element.userName}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="text">
+    <ng-container matColumnDef="employerName">
+      <th mat-header-cell *matHeaderCellDef> Ответственный </th>
+      <td mat-cell *matCellDef="let element"> {{element.employerName === '' ? '-' : element.employerName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="text" style="width: 10vw">
       <th mat-header-cell *matHeaderCellDef> Текст обращения </th>
       <td mat-cell *matCellDef="let element"> {{element.text}} </td>
     </ng-container>
 
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef> Статус </th>
-      <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+      <td mat-cell *matCellDef="let element"> {{getStatusById(element.status)}} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

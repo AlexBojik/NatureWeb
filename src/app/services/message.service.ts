@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {environment} from '../../environments/environment';
 import {URL_NEW_MESSAGES, URL_SEND_MESSAGES} from '../../consts';
+import {UsersService} from './users.service';
 
 
 
@@ -14,6 +15,11 @@ export class Message {
   status: number;
   images: string[];
   imageLoads = false;
+  time: number;
+  end: number;
+  comment: string;
+  employerId: string;
+  employerName: string;
 }
 
 @Injectable({
@@ -29,7 +35,8 @@ export class MessageService {
   public readonly count$: Observable<number> = this._count.asObservable();
 
   constructor(private _http: HttpClient,
-              private _snackBar: MatSnackBar) {
+              private _snackBar: MatSnackBar,
+              private _usrSrv: UsersService) {
   }
 
   getMessages(): void {
@@ -74,8 +81,21 @@ export class MessageService {
   }
 
   sendMessages(): void {
-    this._http.get(URL_SEND_MESSAGES).subscribe( i => {
-      console.log(i);
+    this._http.get(URL_SEND_MESSAGES).subscribe( _ => {
+      this.getMessages();
+    });
+  }
+
+  putMessage(m: Message): void {
+    const url = this.url + 'messages';
+
+    if (m.employerId === '' && m.status > 1) {
+      m.employerId = this._usrSrv.token.value;
+    }
+
+    m.images = [];
+    this._http.put(url, m).subscribe(_ => {
+      this.getMessages();
     });
   }
 }

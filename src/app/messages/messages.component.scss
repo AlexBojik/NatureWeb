@@ -1,3 +1,9 @@
+.messages-tab {
+  padding-top: 44px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
 .messages {
   width: 100%;
   padding-left: 10px;
@@ -6,4 +12,8 @@
 
 tr:hover {
   background: rgba(0, 33, 255, 0.24);
+}
+
+.mat-column-text {
+  width: 30vw;
 }

@@ -80,6 +80,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { UserComponent } from './user/user.component';
 import { UserGroupComponent } from './user-group/user-group.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 @NgModule({
   declarations: [
     AppComponent,
@@ -164,6 +165,7 @@ import { UserGroupComponent } from './user-group/user-group.component';
     MatBadgeModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatSlideToggleModule,
   ],
   providers: [DataService,
     {

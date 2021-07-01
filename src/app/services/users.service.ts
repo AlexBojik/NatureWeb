@@ -48,8 +48,8 @@ export class UsersService {
     return this.user.getValue() !== null;
   }
 
-  get hasSearchRole(): boolean {
-    return this.user.getValue().name !== '';
+  hasAdminRole(): boolean {
+    return this.user.getValue().admin;
   }
 
   user = new BehaviorSubject<User>(null);

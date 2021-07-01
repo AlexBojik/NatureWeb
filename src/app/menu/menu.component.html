@@ -21,7 +21,7 @@
     </button>
   </div>
 
-  <button mat-button *ngIf="showAdmin" (click)="showMessageComponent()">
+  <button mat-button *ngIf="showMessages" (click)="showMessageComponent()">
     <mat-icon class="margin-5">supervisor_account</mat-icon>
     <span [matBadge]="countMessages" [matBadgeHidden]="countMessages === 0" matBadgeOverlap="false" matBadgeColor="warn">Обращения</span></button>
   <span class="example-spacer"></span>
