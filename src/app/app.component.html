@@ -2,6 +2,7 @@
   <app-menu></app-menu>
   <app-map [ngStyle]="mapActive?{}:{display: 'none'}"></app-map>
   <app-layers *ngIf="layersActive"></app-layers>
+  <app-fields *ngIf="fieldsActive"></app-fields>
   <app-dictionaries *ngIf="dictionaryActive"></app-dictionaries>
   <app-admin *ngIf="adminActive"></app-admin>
   <app-users *ngIf="usersActive"></app-users>

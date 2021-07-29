@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
-import {URL_FIELDS} from '../../consts';
+import {HasId, Utils} from '../utils';
 
-export class Dictionary {
+export class Dictionary extends HasId {
   id: number;
   name: string;
 }
@@ -34,9 +34,12 @@ export class DictionariesService {
     });
   }
 
-  postDictionary(name: string): Promise<any> {
+  saveDictionary(dict: Dictionary): void {
     const url = this.url + 'dictionaries';
-    return this._http.post(url, {id: 0, name}).toPromise();
+    Utils.saveElement(this._http, url, dict)
+      .subscribe( q => {
+        this.updateDictionaries();
+      });
   }
 
   getValues(id: number): Promise<Value[]> {
@@ -46,13 +49,31 @@ export class DictionariesService {
     });
   }
 
-  postValue(value: Value): Promise<any> {
-    const url = this.url + 'value/';
-    return this._http.post(url, value).toPromise();
+  saveValue(value: Value): Promise<number> {
+    const url = this.url + 'values';
+    return Utils.saveElement(this._http, url, value).toPromise().then(id  => {
+      this.getValues(value.dictId);
+      return id;
+    });
+  }
+
+  deleteDictionary(dict: Dictionary): void {
+    const url = this.url + 'dictionaries/' + dict.id;
+    this._http.delete(url).subscribe(_ => {
+      this.updateDictionaries();
+    });
+  }
+
+  deleteValue(value: Value): void {
+    const url = this.url + 'values/' + value.id;
+    this._http.delete(url).subscribe(_ => {
+      this.updateDictionaries();
+    });
   }
 
   getAllValues(): void {
-    this._http.get(URL_FIELDS).toPromise().then(res => {
+    const url = this.url + 'values';
+    this._http.get(url).toPromise().then(res => {
       this._values.next(res as Value[]);
     });
   }

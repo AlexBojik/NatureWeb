@@ -8,6 +8,8 @@
     <mat-icon class="margin-5">layers</mat-icon>Слои</button>
   <button mat-button *ngIf="showDictionaries" (click)="showDictionaryComponent()">
     <mat-icon class="margin-5">storage</mat-icon>Справочники</button>
+  <button mat-button *ngIf="showDictionaries" (click)="showFieldsComponent()">
+    <mat-icon class="margin-5">view_list</mat-icon>Дополнительные поля</button>
   <button mat-button *ngIf="showAdmin" (click)="showAdminComponent()">
     <mat-icon class="margin-5">admin_panel_settings</mat-icon>Администрирование</button>
   <button mat-button *ngIf="showUsers" (click)="showUsersComponent()">

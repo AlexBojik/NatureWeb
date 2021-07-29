@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {DictionariesService, Dictionary} from '../../../services/dictionaries.service';
 
 @Component({
   selector: 'app-dictionary',
@@ -6,11 +8,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dictionary.component.scss']
 })
 export class DictionaryComponent implements OnInit {
-  name: string;
-
-  constructor() { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: Dictionary, private dictService: DictionariesService) { }
 
   ngOnInit(): void {
   }
 
+  save(): void {
+    this.dictService.saveDictionary(this.data);
+  }
+
+  delete(): void {
+    this.dictService.deleteDictionary(this.data);
+  }
 }

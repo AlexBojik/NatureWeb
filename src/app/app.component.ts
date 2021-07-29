@@ -29,6 +29,38 @@ export class AppComponent {
     timer(0, 10000).pipe().subscribe(() => {
       this.msgSrv.getCountMessages();
     });
+
+    // this.test();
+  }
+
+  test(): void {
+    const re = /..°.{1,2}΄.{1,7}"/g;
+    const coordinates = [];
+    let x = 0;
+    let y = 0;
+    let match;
+    const str = ' с.ш., 41°58΄27,3" в.д.';
+    do {
+      match = re.exec(str);
+      if (match) {
+        const [g, ms] = match[0].split('°');
+        const [m, s] = ms.split('΄');
+        if (x === 0) {
+          x = parseInt(g, 0) + parseInt(m, 0) / 60 + parseFloat(s.replace('"', '')) / 3600;
+        } else {
+          y = parseInt(g, 0) + parseInt(m, 0) / 60 + parseFloat(s.replace('"', '')) / 3600;
+          if (x > y) {
+            coordinates.push([y, x]);
+          } else {
+            coordinates.push([x, y]);
+          }
+
+          x = 0;
+          y = 0;
+        }
+      }
+    } while (match);
+    console.log(coordinates);
   }
 
   get mapActive(): boolean {
@@ -41,6 +73,10 @@ export class AppComponent {
 
   get layersActive(): boolean {
     return this.navSrv.layersActive;
+  }
+
+  get fieldsActive(): boolean {
+    return this.navSrv.fieldsActive;
   }
 
   get dictionaryActive(): boolean {

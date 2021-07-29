@@ -81,6 +81,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { UserComponent } from './user/user.component';
 import { UserGroupComponent } from './user-group/user-group.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { LoadingComponent } from './loading/loading.component';
+import { ValueComponent } from './value/value.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -128,6 +130,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     NewsEditFormComponent,
     UserComponent,
     UserGroupComponent,
+    LoadingComponent,
+    ValueComponent,
   ],
   imports: [
     BrowserModule,

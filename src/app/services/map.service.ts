@@ -286,21 +286,20 @@ export class MapService {
   }
 
   private _addFillLayer(layerId, layer): void {
-    if (!layer.color) {
-      return;
+    if (layer.color) {
+      this.map.addLayer({
+        id: layerId,
+        type: FILL,
+        source: layerId,
+        paint: {
+          'fill-color': layer.color,
+          'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.9, 0.5]
+        },
+        filter: ['==', '$type', 'Polygon'],
+      });
     }
-    this.map.addLayer({
-      id: layerId,
-      type: FILL,
-      source: layerId,
-      paint: {
-        'fill-color': layer.color,
-        'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.9, 0.5]
-      },
-      filter: ['==', '$type', 'Polygon'],
-    });
 
-    if (layer.lineWidth !== 0) {
+    if (layer.lineWidth !== 0 && layer.lineColor) {
       this.map.addLayer({
         id: layerId + LINE,
         type: LINE,
@@ -353,18 +352,20 @@ export class MapService {
         filter: ['==', '$type', 'Point']
       });
     } else {
-      this.map.addLayer({
-        id: layerId + POINTS,
-        type: 'circle',
-        source: layerId,
-        paint: {
-          'circle-radius': ['case', ['boolean', ['feature-state', 'hover'], false], 6, 4],
-          'circle-color': layer.color,
-          'circle-stroke-width': 1,
-          'circle-stroke-color': 'white'
-        },
-        filter: ['==', '$type', 'Point']
-      });
+      if (layer.color) {
+        this.map.addLayer({
+          id: layerId + POINTS,
+          type: 'circle',
+          source: layerId,
+          paint: {
+            'circle-radius': ['case', ['boolean', ['feature-state', 'hover'], false], 6, 4],
+            'circle-color': layer.color,
+            'circle-stroke-width': 1,
+            'circle-stroke-color': 'white'
+          },
+          filter: ['==', '$type', 'Point']
+        });
+      }
     }
   }
 

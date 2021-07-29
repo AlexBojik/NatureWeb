@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Geometry} from 'geojson';
+import {Feature, Geometry} from 'geojson';
 import {FieldValueObject} from './fields.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {URL_FILTER, URL_UPDATE_COORDINATES} from '../../consts';
 import {UsersService} from './users.service';
+import {GeoJSONSource} from 'mapbox-gl';
 
 export class GeoObject {
   id: number;
@@ -55,24 +56,13 @@ export class ObjectsService {
 
   // TODO: Обработка сетевых статусов и выдача ошибок
 
-  getObjects(layerId): Promise<GeoObject[]> {
+  getObjects(layerId): Promise<Feature<Geometry>[]> {
     const url = this.url + 'layers/' + layerId;
-    return new Promise<GeoObject[]>((resolve) => {
-      try {
-        return this._http.get(url)
-          .toPromise()
-          .then(objects => {
-            const currentObjects = objects as GeoObject[];
-            currentObjects.forEach(obj => {
-              this._objects[obj.id] = obj;
-            });
-            resolve(currentObjects);
-          });
-      } catch (err) {
-        console.log(err);
-        return Promise.resolve(null);
-      }
-    });
+    return this._http.get(url)
+      .toPromise()
+      .then(objects => {
+        return (objects as GeoJSON.FeatureCollection).features;
+      });
   }
 
   deleteObject(id): Promise<any> {

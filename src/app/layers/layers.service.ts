@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ObjectsService} from '../services/objects.service';
-import {FieldsService} from '../services/fields.service';
+import {Field, FieldsService} from '../services/fields.service';
 import {Color} from '@angular-material-components/color-picker';
 import {URL_LAYER_LIST} from '../../consts';
 import {UsersService} from '../services/users.service';
@@ -28,6 +28,7 @@ export class Layer {
   isGroup: boolean;
   col: Color;
   col1: Color;
+  fields?: Field[];
 }
 
 @Injectable({
@@ -46,11 +47,10 @@ export class LayersService {
 
   set selected(value) {
     this._selected.next(value);
-    // TODO: Чето с полями
-    // this._fieldSrv.updateFields(value.id).then(fields => {
-      // value.fields = fields;
-      // this._selected.next(value);
-    // });
+    this._fieldSrv.updateFields(value.id).then(fields => {
+      value.fields = fields;
+      this._selected.next(value);
+    });
   }
 
   get selected(): Layer {
@@ -117,5 +117,12 @@ export class LayersService {
     } else {
       return this._http.put(URL_LAYER_LIST, layer).toPromise();
     }
+  }
+
+  delete(id: number): void {
+    this._http.delete(URL_LAYER_LIST + '/' + id.toString()).subscribe( _ => {
+        this.updateLayers();
+        this.selected = null;
+    });
   }
 }

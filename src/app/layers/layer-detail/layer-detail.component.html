@@ -113,9 +113,18 @@
           <mat-icon>save</mat-icon>
           Сохранить
         </button>
+
+        <button mat-raised-button color="warn" (click)="delete()" [disabled]="!layerForm.valid || selected.isGroup">
+          <mat-icon>delete</mat-icon>
+          Удалить
+        </button>
       </p>
     </mat-tab>
-    <mat-tab label="Объекты" *ngIf="isObjectsLayer">
+    <button mat-button color="primary" (click)="addField()">
+      <mat-icon>add</mat-icon>
+      Добавить поле
+    </button>
+    <<mat-tab label="Объекты" *ngIf="isObjectsLayer">
       <div class="w-100">
         <app-object-table></app-object-table>
       </div>

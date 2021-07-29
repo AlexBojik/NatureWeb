@@ -25,10 +25,7 @@ export class LayerDetailComponent implements OnInit {
     }, {
       id: 'fill',
       name: 'Заполненнные объекты',
-    }, {
-      id: 'stroke',
-      name: 'Только границы',
-    }
+    },
   ];
   groups: Layer[] = [];
   icons = [
@@ -85,7 +82,7 @@ export class LayerDetailComponent implements OnInit {
       this.isSelected = false;
       if (layer) {
         this.selected = layer;
-        // this.fields = this.selected.fields;
+        this.fields = this.selected.fields;
         this.isObjectsLayer = this.selected.type !== 'raster';
         this.isSelected = true;
         this.selected.col = this._hexToRgb(this.selected.color);
@@ -135,18 +132,15 @@ export class LayerDetailComponent implements OnInit {
       });
   }
 
-  deleteField(field: Field): void {
-    const index = this.fields.indexOf(field, 0);
-    if (index > -1) {
-      this.fields.splice(index, 1);
-    }
-  }
-
   clearCol(): void {
     this.layerForm.patchValue({col: null});
   }
 
   clearCol1(): void {
     this.layerForm.patchValue({col1: null});
+  }
+
+  delete(): void {
+    this.layersSrv.delete(this.selected.id);
   }
 }

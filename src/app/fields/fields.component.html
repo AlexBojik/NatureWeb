@@ -1,1 +1,35 @@
-<p>fields works!</p>
+<mat-list role="list" style="margin-top: 64px">
+  <button mat-button color="primary" (click)="addField()">
+    <mat-icon>add</mat-icon>
+    Добавить поле
+  </button>
+  <div mat-subheader>Состав дополнительных полей</div>
+  <mat-list-item *ngFor="let field of fields" role="listitem" class="fields-container">
+    <mat-form-field style="width: 30%">
+      <mat-label>Наименование</mat-label>
+      <input matInput placeholder="Наименование поля" [(ngModel)]="field.name" required>
+    </mat-form-field>
+    <mat-form-field style="width: 30%">
+      <mat-label>Тип поля</mat-label>
+      <mat-select [(ngModel)]="field.type" required>
+        <mat-option *ngFor="let dict of dictionaries" [value]="dict.id">
+          {{dict.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field style="width: 30%">
+      <mat-label>Видимость</mat-label>
+      <mat-select [(ngModel)]="field.limitation">
+        <mat-option *ngFor="let opt of trueFalseOptions" [value]="opt.val">
+          {{opt.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-icon-button (click)="save(field)">
+      <mat-icon color="primary">save</mat-icon>
+    </button>
+    <button mat-icon-button (click)="deleteField(field)">
+      <mat-icon color="warn">delete</mat-icon>
+    </button>
+  </mat-list-item>
+</mat-list>

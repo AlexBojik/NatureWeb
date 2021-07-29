@@ -92,4 +92,8 @@ export class MenuComponent implements OnInit {
   showUsersComponent(): void {
     this.navSrv.showUsersToggle();
   }
+
+  showFieldsComponent(): void {
+    this.navSrv.showFieldsToggle();
+  }
 }

@@ -7,7 +7,8 @@ export enum Path {
   DICTIONARY,
   ADMINISTRATION,
   MESSAGES,
-  USERS
+  USERS,
+  FIELDS
 }
 
 
@@ -26,11 +27,7 @@ export class NavigateService {
   }
 
   showLayersToggle(): void {
-    if (this._currentPath !== Path.LAYERS) {
-      this._currentPath = Path.LAYERS;
-    } else {
-      this.showMap();
-    }
+    this._togglePath(Path.LAYERS);
   }
 
   get mapActive(): boolean {
@@ -39,6 +36,10 @@ export class NavigateService {
 
   get messageActive(): boolean {
     return this._currentPath === Path.MESSAGES;
+  }
+
+  get fieldsActive(): boolean {
+    return this._currentPath === Path.FIELDS;
   }
 
   get layersActive(): boolean {
@@ -59,32 +60,28 @@ export class NavigateService {
 
 
   showDictionaryToggle(): void {
-    if (this._currentPath !== Path.DICTIONARY) {
-      this._currentPath = Path.DICTIONARY;
-    } else {
-      this.showMap();
-    }
+    this._togglePath(Path.DICTIONARY);
   }
 
   showAdminToggle(): void {
-    if (this._currentPath !== Path.ADMINISTRATION) {
-      this._currentPath = Path.ADMINISTRATION;
-    } else {
-      this.showMap();
-    }
+    this._togglePath(Path.ADMINISTRATION);
   }
 
   showMessageToggle(): void {
-    if (this._currentPath !== Path.MESSAGES) {
-      this._currentPath = Path.MESSAGES;
-    } else {
-      this.showMap();
-    }
+    this._togglePath(Path.MESSAGES);
   }
 
   showUsersToggle(): void {
-    if (this._currentPath !== Path.USERS) {
-      this._currentPath = Path.USERS;
+    this._togglePath(Path.USERS);
+  }
+
+  showFieldsToggle(): void {
+    this._togglePath(Path.FIELDS);
+  }
+
+  private _togglePath(value: Path): void {
+    if (this._currentPath !== value) {
+      this._currentPath = value;
     } else {
       this.showMap();
     }

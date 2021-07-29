@@ -3,6 +3,7 @@ import {UploadService} from '../services/upload.service';
 import {MatDialog} from '@angular/material/dialog';
 import {ImportComponent} from '../import/import.component';
 import {ImportKPTComponent} from '../import-kpt/import-kpt.component';
+import {LoadingComponent} from '../loading/loading.component';
 
 @Component({
   selector: 'app-upload',
@@ -58,7 +59,7 @@ export class UploadComponent implements OnInit {
   }
 
   updateWfs(): void {
-    this.uploadSrv.uploadWfs();
+    this.dialog.open(LoadingComponent);
   }
 
   importKPT(): void {

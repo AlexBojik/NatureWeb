@@ -7,6 +7,9 @@ import {ImportComponent} from '../../import/import.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ObjectsComponent} from '../object/objects.component';
 import {MapboxComponent} from '../../mapbox/mapbox.component';
+import * as mapboxgl from 'mapbox-gl';
+import {MapService} from '../../services/map.service';
+import {NavigateService} from '../../services/navigate.service';
 
 @Component({
   selector: 'app-object-table',
@@ -28,18 +31,27 @@ export class ObjectTableComponent implements OnInit {
   constructor(private _layersSrv: LayersService,
               private _objSrv: ObjectsService,
               private _snackBar: MatSnackBar,
+              private _mapSrv: MapService,
+              private _navSrv: NavigateService,
               public dialog: MatDialog) {
     this._layersSrv.selected$.subscribe(l => {
       this.loading = true;
       this.loading = false;
-      // TODO: подгрузка таблицы объектов
-      // this._objSrv.getObjects(l.id)
-      //   .then(objects => {
-      //     this.loading = false;
-      //     // l.objects = objects;
-      //     this.objects = objects;
-      //     this.dataSource = new MatTableDataSource<GeoObject>(this.objects);
-      //   });
+
+      this._objSrv.getObjects(l.id)
+        .then(objects => {
+          this.objects = [];
+          for (const f of objects) {
+            const geoObject = new GeoObject(this._layersSrv.selected.id, f.properties.name, f.geometry.type, [], '', []);
+            geoObject.geoJson = f.geometry;
+            geoObject.id = f.id as number;
+            this.objects.push(geoObject);
+          }
+          this.loading = false;
+          // l.objects = objects;
+          // this.objects = objects;
+          this.dataSource = new MatTableDataSource<GeoObject>(this.objects);
+        });
     });
   }
 
@@ -78,6 +90,25 @@ export class ObjectTableComponent implements OnInit {
   }
 
   pick(obj: GeoObject): void {
-    this.dialog.open(MapboxComponent, {width: '600px', height: '600px', data: obj});
+    this._layersSrv.added = this._layersSrv.selected;
+
+    if (obj.geoJson.type === 'Point') {
+      this._mapSrv.map.flyTo({center: [obj.geoJson.coordinates[0], obj.geoJson.coordinates[1]], zoom: 16});
+    } else if (obj.geoJson.type === 'Polygon') {
+      const bounds = new mapboxgl.LngLatBounds();
+      obj.geoJson.coordinates[0].forEach(c => {
+        bounds.extend([c[0], c[1]]);
+      });
+
+      this._mapSrv.map.fitBounds(bounds, {padding: 100});
+    } else if (obj.geoJson.type === 'MultiPolygon') {
+      const bounds = new mapboxgl.LngLatBounds();
+      obj.geoJson.coordinates[0][0].forEach(c => {
+        bounds.extend([c[0], c[1]]);
+      });
+
+      this._mapSrv.map.fitBounds(bounds, {padding: 100});
+    }
+    this._navSrv.showMap();
   }
 }
