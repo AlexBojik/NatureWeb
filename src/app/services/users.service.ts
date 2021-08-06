@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import {URL_USER, URL_USER_GROUPS, URL_USER_LIST, URL_USER_PUT} from '../../consts';
 
 export class User {
+  id: number
   name: string;
   phone: string;
   email: string;
@@ -18,6 +19,7 @@ export class User {
   messages: boolean;
   info: boolean;
   group: number;
+  block: boolean;
 }
 
 export class UserGroups {
@@ -96,5 +98,9 @@ export class UsersService {
 
   postUserGroup(current: UserGroups): Observable<number> {
     return this._http.post(URL_USER_GROUPS, current) as Observable<number>;
+  }
+
+  deleteUser(user: User): Promise<any> {
+    return this._http.delete(URL_USER + '/' + user.token).toPromise();
   }
 }

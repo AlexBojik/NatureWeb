@@ -83,6 +83,7 @@ import { UserGroupComponent } from './user-group/user-group.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { LoadingComponent } from './loading/loading.component';
 import { ValueComponent } from './value/value.component';
+import {NgxMaskModule} from 'ngx-mask';
 @NgModule({
   declarations: [
     AppComponent,
@@ -134,6 +135,7 @@ import { ValueComponent } from './value/value.component';
     ValueComponent,
   ],
   imports: [
+    NgxMaskModule.forRoot(),
     BrowserModule,
     MatMenuModule,
     MatButtonModule,
@@ -170,6 +172,7 @@ import { ValueComponent } from './value/value.component';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSlideToggleModule,
+    NgxMaskModule,
   ],
   providers: [DataService,
     {

@@ -1,12 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Feature, Geometry} from 'geojson';
+import {Feature, GeoJSON, Geometry} from 'geojson';
 import {FieldValueObject} from './fields.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {URL_FILTER, URL_UPDATE_COORDINATES} from '../../consts';
 import {UsersService} from './users.service';
-import {GeoJSONSource} from 'mapbox-gl';
 
 export class GeoObject {
   id: number;
@@ -124,5 +123,20 @@ export class ObjectsService {
       });
     this.editing = 0;
     this.drawed = '';
+  }
+
+  updateCoordinates(type, coordinates, id, layerId): void {
+    const { stringify } = require('wkt');
+    const geoJSON = {
+      type,
+      coordinates
+    } as Geometry;
+    let wkt = stringify(geoJSON);
+    if (type === 'Point') {
+      wkt = wkt.replace(',', ' ');
+    }
+    this._http.put(URL_UPDATE_COORDINATES, {id, wkt}).subscribe(_ => {
+      this._updateLayer.next(layerId);
+    });
   }
 }

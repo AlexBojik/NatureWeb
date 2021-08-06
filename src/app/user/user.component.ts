@@ -12,7 +12,12 @@ export class UserComponent implements OnInit {
   userGroups: UserGroups[];
   constructor(@Inject(MAT_DIALOG_DATA) public data: User, private usrSrv: UsersService) {
     this.usrSrv.getUserGroups().subscribe(userGroups => {
-      this.userGroups = userGroups as UserGroups[];
+      const ug = new UserGroups();
+      ug.id = 0;
+      ug.name = 'Все пользователи';
+
+      this.userGroups = [ug];
+      this.userGroups.push(...userGroups as UserGroups[]);
     });
     this.current = data;
   }

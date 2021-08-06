@@ -1,5 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {ObjectsService} from '../services/objects.service';
 
 @Component({
   selector: 'app-coordinate',
@@ -7,23 +8,33 @@ import {MAT_DIALOG_DATA} from '@angular/material/dialog';
   styleUrls: ['./coordinate.component.scss']
 })
 export class CoordinateComponent implements OnInit {
-  coordinates  = '';
+  coordinates: Array<{lat: number, lon: number, id: number}> = [];
+  // coordinates  = '';
   coordinatesFg = '';
+  id: number;
+  type: string;
+  types = [{id: 'Point', name: 'Точка'}, {id: 'Polygon', name: 'Полигон'}, {id: 'MultiPolygon', name: 'Сложный полигон'}];
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any,
+              private _objSrv: ObjectsService) {
+    this.type = data.geoJson.type;
+    this.id = 0;
     if (data.geoJson.type === 'Point') {
       const c = data.geoJson.coordinates;
-      this.coordinates += '' + c[1] + ' ' + c[0];
-      this.coordinatesFg += '' + this.grad(c[1]) + ' ' + this.grad(c[0]);
+      this.coordinates.push({lon: c[1], lat: c[0], id: this.id++});
+      // this.coordinates += '' + c[1] + ' ' + c[0];
+      this.coordinatesFg += '' + this.grad(c[1]) + 'С.Ш. \t' + this.grad(c[0]) + ' В.Д.';
     } else if (data.geoJson.type === 'Polygon') {
       data.geoJson.coordinates[0].forEach(c => {
-        this.coordinates += '' + c[0] + ' ' + c[1] + '\n';
-        this.coordinatesFg += '' + this.grad(c[0]) + ' ' + this.grad(c[1]) + '\n';
+        this.coordinates.push({lon: c[1], lat: c[0], id: this.id++});
+        // this.coordinates += '' + c[0] + '  ' + c[1] + '\n';
+        this.coordinatesFg += '' + this.grad(c[0]) + ' С.Ш. \t' + this.grad(c[1]) + ' В.Д.\n';
       });
     } else if (data.geoJson.type === 'MultiPolygon') {
       data.geoJson.coordinates[0][0].forEach(c => {
-        this.coordinates += '' + c[0] + ' ' + c[1] + '\n';
-        this.coordinatesFg += '' + this.grad(c[0]) + ' ' + this.grad(c[1]) + '\n';
+        this.coordinates.push({lon: c[1], lat: c[0], id: this.id++});
+        // this.coordinates += '' + c[0] + ' ' + c[1] + '\n';
+        this.coordinatesFg += '' + this.grad(c[0]) + ' С.Ш. \t' + this.grad(c[1]) + ' В.Д.\n';
       });
     }
   }
@@ -38,4 +49,29 @@ export class CoordinateComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  delete(c): void {
+    const index = this.coordinates.findIndex(val => val.id === c.id);
+    this.coordinates.splice(index, 1);
+  }
+
+  save(): void {
+    let coordinates = [];
+    const coords = [];
+    this.coordinates.forEach(c => {
+      coords.push([c.lat, c.lon]);
+    });
+    if (this.type === 'Point') {
+      coordinates = coords;
+    } else if (this.type === 'Polygon') {
+      coordinates.push(coords);
+    } else {
+      coordinates.push([coords]);
+    }
+
+    this._objSrv.updateCoordinates(this.type, coordinates, this.data.id, this.data.layer.id);
+  }
+
+  add(): void {
+    this.coordinates.push({id: this.id, lon: 0, lat: 0});
+  }
 }

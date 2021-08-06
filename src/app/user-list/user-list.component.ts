@@ -12,18 +12,15 @@ import {MatTableDataSource} from '@angular/material/table';
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements AfterViewInit {
-  displayedColumns: string[] = ['name', 'phone', 'email', 'admin', 'layers', 'dicts', 'messages', 'info', 'delete'];
+  displayedColumns: string[] = ['name', 'phone', 'email', 'admin', 'layers', 'dicts', 'messages', 'info', 'block', 'delete'];
   dataSource = new MatTableDataSource([]);
   @Input() userGroup: UserGroups;
-  private _dialog: MatDialog;
   current: User;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private _usrSrv: UsersService, private dialog: MatDialog) {
-    this._dialog = dialog;
-  }
+  constructor(private _usrSrv: UsersService, private _dialog: MatDialog) {}
 
   toggleAdmin(user: User): void {
     this._usrSrv.updateUser(user);
@@ -55,6 +52,16 @@ export class UserListComponent implements AfterViewInit {
     this._usrSrv.getUsersWithGroup(this.userGroup).subscribe(users => {
       this.dataSource = new MatTableDataSource(users);
       this.dataSource.sort = this.sort;
+    });
+  }
+
+  toggleBlock(user: User): void {
+    this._usrSrv.updateUser(user);
+  }
+
+  delete(user: User): void {
+    this._usrSrv.deleteUser(user).then(_ => {
+      this.ngAfterViewInit();
     });
   }
 }
