@@ -1,1 +1,3 @@
-<button  mat-raised-button color="primary">Перестроение инексов</button>
+<mat-spinner *ngIf="rebuilding"></mat-spinner>
+<h3 *ngIf="rebuilded">Индекс успешно перестроен!</h3>
+<button  mat-raised-button color="primary" (click)="rebuild()">Перестроение инексов</button>

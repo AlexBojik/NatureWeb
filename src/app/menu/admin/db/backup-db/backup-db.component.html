@@ -1,1 +1,9 @@
-<button mat-raised-button color="primary">Создать резервную копию</button>
+<div>
+  <mat-list role="list">
+    <mat-list-item *ngFor="let d of dumps" role="listitem">
+      <a href="{{dumpsCatalog}}{{d.name}}">{{d.name}}</a>
+    </mat-list-item>
+  </mat-list>
+</div>
+<mat-spinner *ngIf="creating"></mat-spinner>
+<button mat-raised-button color="primary" (click)="createDump()">Создать резервную копию</button>

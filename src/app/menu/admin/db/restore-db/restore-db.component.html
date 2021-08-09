@@ -1,5 +1,10 @@
-<mat-form-field>
+<mat-form-field style="width: 300px;">
   <mat-label>Резервная копия</mat-label>
-  <input type="text" matInput required>
+  <mat-select required [(ngModel)]="current">
+    <mat-option *ngFor="let d of dumps" [value]="d.name">
+      {{d.name}}
+    </mat-option>
+  </mat-select>
 </mat-form-field>
-<button mat-raised-button color="primary">Восстановить из резервной копии</button>
+<mat-spinner *ngIf="restoring"></mat-spinner>
+<button mat-raised-button color="primary" (click)="restore()">Восстановить из резервной копии</button>

@@ -21,20 +21,20 @@ export class CoordinateComponent implements OnInit {
     this.id = 0;
     if (data.geoJson.type === 'Point') {
       const c = data.geoJson.coordinates;
-      this.coordinates.push({lon: c[1], lat: c[0], id: this.id++});
+      this.coordinates.push({lon: c[0], lat: c[1], id: this.id++});
       // this.coordinates += '' + c[1] + ' ' + c[0];
       this.coordinatesFg += '' + this.grad(c[1]) + 'С.Ш. \t' + this.grad(c[0]) + ' В.Д.';
     } else if (data.geoJson.type === 'Polygon') {
       data.geoJson.coordinates[0].forEach(c => {
-        this.coordinates.push({lon: c[1], lat: c[0], id: this.id++});
+        this.coordinates.push({lon: c[0], lat: c[1], id: this.id++});
         // this.coordinates += '' + c[0] + '  ' + c[1] + '\n';
-        this.coordinatesFg += '' + this.grad(c[0]) + ' С.Ш. \t' + this.grad(c[1]) + ' В.Д.\n';
+        this.coordinatesFg += '' + this.grad(c[1]) + ' С.Ш. \t' + this.grad(c[0]) + ' В.Д.\n';
       });
     } else if (data.geoJson.type === 'MultiPolygon') {
       data.geoJson.coordinates[0][0].forEach(c => {
-        this.coordinates.push({lon: c[1], lat: c[0], id: this.id++});
+        this.coordinates.push({lon: c[0], lat: c[1], id: this.id++});
         // this.coordinates += '' + c[0] + ' ' + c[1] + '\n';
-        this.coordinatesFg += '' + this.grad(c[0]) + ' С.Ш. \t' + this.grad(c[1]) + ' В.Д.\n';
+        this.coordinatesFg += '' + this.grad(c[1]) + ' С.Ш. \t' + this.grad(c[0]) + ' В.Д.\n';
       });
     }
   }
@@ -58,7 +58,7 @@ export class CoordinateComponent implements OnInit {
     let coordinates = [];
     const coords = [];
     this.coordinates.forEach(c => {
-      coords.push([c.lat, c.lon]);
+      coords.push([c.lon, c.lat]);
     });
     if (this.type === 'Point') {
       coordinates = coords;

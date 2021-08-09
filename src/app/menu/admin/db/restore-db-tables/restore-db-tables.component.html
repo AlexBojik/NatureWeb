@@ -1,5 +1,9 @@
 <mat-form-field>
   <mat-label>Таблица</mat-label>
-  <input type="text" matInput required>
+  <mat-select>
+    <mat-option *ngFor="let t of tables" [value]="t">{{t}}
+    </mat-option>
+  </mat-select>
 </mat-form-field>
-<button  mat-raised-button color="primary">Перестроение инексов</button>
+<mat-spinner *ngIf="restoring"></mat-spinner>
+<button  mat-raised-button color="primary" (click)="restore()">Восстановить</button>
