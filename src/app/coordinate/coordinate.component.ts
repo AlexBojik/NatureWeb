@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ObjectsService} from '../services/objects.service';
+import {UsersService} from '../services/users.service';
 
 @Component({
   selector: 'app-coordinate',
@@ -14,26 +15,30 @@ export class CoordinateComponent implements OnInit {
   id: number;
   type: string;
   types = [{id: 'Point', name: 'Точка'}, {id: 'Polygon', name: 'Полигон'}, {id: 'MultiPolygon', name: 'Сложный полигон'}];
+  hasEditRole = false;
+  coordinatesDc = '';
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
+              private _usrSrv: UsersService,
               private _objSrv: ObjectsService) {
+    this.hasEditRole = _usrSrv.hasAdminRole();
     this.type = data.geoJson.type;
     this.id = 0;
     if (data.geoJson.type === 'Point') {
       const c = data.geoJson.coordinates;
       this.coordinates.push({lon: c[0], lat: c[1], id: this.id++});
-      // this.coordinates += '' + c[1] + ' ' + c[0];
+      this.coordinatesDc += '' + c[1] + ' ' + c[0];
       this.coordinatesFg += '' + this.grad(c[1]) + 'С.Ш. \t' + this.grad(c[0]) + ' В.Д.';
     } else if (data.geoJson.type === 'Polygon') {
       data.geoJson.coordinates[0].forEach(c => {
         this.coordinates.push({lon: c[0], lat: c[1], id: this.id++});
-        // this.coordinates += '' + c[0] + '  ' + c[1] + '\n';
+        this.coordinatesDc += '' + c[1] + '  ' + c[0] + '\n';
         this.coordinatesFg += '' + this.grad(c[1]) + ' С.Ш. \t' + this.grad(c[0]) + ' В.Д.\n';
       });
     } else if (data.geoJson.type === 'MultiPolygon') {
       data.geoJson.coordinates[0][0].forEach(c => {
         this.coordinates.push({lon: c[0], lat: c[1], id: this.id++});
-        // this.coordinates += '' + c[0] + ' ' + c[1] + '\n';
+        this.coordinatesDc += '' + c[1] + ' ' + c[0] + '\n';
         this.coordinatesFg += '' + this.grad(c[1]) + ' С.Ш. \t' + this.grad(c[0]) + ' В.Д.\n';
       });
     }

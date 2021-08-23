@@ -32,7 +32,8 @@ export class InfoComponent implements OnInit {
               public dialog: MatDialog) {
 
     _usrSrv.user$.subscribe(usr => {
-      this.hasEditRole = _usrSrv.hasEditRole;
+      this.hasEditRole = _usrSrv.hasAdminRole();
+      console.log(this.hasEditRole);
     });
 
     this._objSrv.filtered$.subscribe(features => {
@@ -79,6 +80,7 @@ export class InfoComponent implements OnInit {
 
   openCoordinates(obj): void {
     this.dialog.open(CoordinateComponent, {
+      maxHeight: '90vh',
       data: obj
     });
   }

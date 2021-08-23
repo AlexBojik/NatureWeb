@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import {URL_USER, URL_USER_GROUPS, URL_USER_LIST, URL_USER_PUT} from '../../consts';
 
 export class User {
-  id: number
+  id: number;
   name: string;
   phone: string;
   email: string;
@@ -50,10 +50,6 @@ export class UsersService {
     return this.user.getValue() !== null;
   }
 
-  hasAdminRole(): boolean {
-    return this.user.getValue().admin;
-  }
-
   user = new BehaviorSubject<User>(null);
   private _users = new BehaviorSubject<User[]>([]);
   public readonly user$: Observable<User> = this.user.asObservable();
@@ -68,6 +64,15 @@ export class UsersService {
       localStorage.setItem('token', res.get('t'));
       window.location.href = url[0];
     }
+  }
+
+  hasAdminRole(): boolean {
+    let res = false;
+    const usr = this.user.getValue();
+    if (!!usr) {
+      res = usr.admin;
+    }
+    return res;
   }
 
   getUser(token: string): void {

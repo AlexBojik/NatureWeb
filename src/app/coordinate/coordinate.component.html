@@ -1,5 +1,5 @@
-<div mat-dialog-content>
-  <mat-form-field style="width: 200px">
+<div mat-dialog-content style="max-height: 80vh">
+  <mat-form-field style="width: 200px" *ngIf="hasEditRole">
     <mat-label>Тип объекта</mat-label>
     <mat-select required [(ngModel)]="type">
       <mat-option *ngFor="let t of types" [value]="t.id">
@@ -7,9 +7,9 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <button mat-raised-button matSuffix color="primary" (click)="save()" mat-dialog-close>Сохранить</button>
+  <button *ngIf="hasEditRole" mat-raised-button matSuffix color="primary" (click)="save()" mat-dialog-close>Сохранить</button>
   <h3>Координаты (десятичные)</h3>
-  <div style="overflow: scroll">
+  <div style="overflow: scroll" *ngIf="hasEditRole">
     <div *ngFor="let c of coordinates" style="width: 400px;">
       <mat-form-field style="width: 180px">
         <mat-label>широта</mat-label>
@@ -29,6 +29,7 @@
       Добавить
     </button>
   </div>
+  <textarea matInput [(ngModel)]="coordinatesDc" style="min-width: 300px; min-height: 200px" readonly></textarea>
 <!--  <textarea matInput [(ngModel)]="coordinates" style="min-width: 300px; min-height: 200px"></textarea>-->
   <h3>Координаты (градусы)</h3>
   <textarea matInput [(ngModel)]="coordinatesFg" style="min-width: 300px; min-height: 200px" readonly></textarea>
