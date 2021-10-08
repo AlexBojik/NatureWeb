@@ -1,0 +1,13 @@
+<div>
+  <mat-list role="list">
+    <mat-list-item *ngFor="let f of files" role="listitem">
+      <a href="{{filesCatalog}}{{f.name}}">{{f.name}}</a>
+      <button mat-icon-button color="primary" class="copy" (click)="current = f"><mat-icon>content_copy</mat-icon></button>
+      <button mat-icon-button color="warn" (click)="delete(f)"><mat-icon>delete</mat-icon></button>
+    </mat-list-item>
+  </mat-list>
+</div>
+<mat-spinner *ngIf="uploading"></mat-spinner>
+<p>Выберите файлы</p>
+<input type="file" #xml multiple="false"/>
+<button mat-raised-button color="primary" (click)="load(xml.files)">Загрузить</button>

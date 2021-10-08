@@ -84,6 +84,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { LoadingComponent } from './loading/loading.component';
 import { ValueComponent } from './value/value.component';
 import {NgxMaskModule} from 'ngx-mask';
+import { FilesComponent } from './menu/admin/files/files.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -133,6 +134,7 @@ import {NgxMaskModule} from 'ngx-mask';
     UserGroupComponent,
     LoadingComponent,
     ValueComponent,
+    FilesComponent,
   ],
   imports: [
     NgxMaskModule.forRoot(),

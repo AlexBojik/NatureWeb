@@ -33,7 +33,6 @@ export class InfoComponent implements OnInit {
 
     _usrSrv.user$.subscribe(usr => {
       this.hasEditRole = _usrSrv.hasAdminRole();
-      console.log(this.hasEditRole);
     });
 
     this._objSrv.filtered$.subscribe(features => {

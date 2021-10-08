@@ -23,6 +23,7 @@ export class ImageService {
     this.matIconRegistry.addSvgIcon('deer', this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/deer.svg'));
     // росреестр
     this.matIconRegistry.addSvgIcon('pkk', this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/pkk.svg'));
-
+    // контакты
+    this.matIconRegistry.addSvgIcon('contacts', this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/contacts.svg'));
   }
 }

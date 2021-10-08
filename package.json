@@ -27,6 +27,7 @@
     "@types/fs-extra": "^9.0.1",
     "@types/proj4": "^2.5.0",
     "bootstrap": "^4.5.2",
+    "clipboard": "^2.0.8",
     "constants": "0.0.2",
     "esri-loader": "^2.15.0",
     "faker": "^5.1.0",
