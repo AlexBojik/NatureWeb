@@ -59,6 +59,27 @@ export class LayerDetailComponent implements OnInit {
     }, {
       id: 'tech',
       name: 'Красный кран'
+    }, {
+      id: 'min',
+      name: 'Министерство'
+    }, {
+      id: 'hands',
+      name: 'Руки и дерево'
+    }, {
+      id: 'list',
+      name: 'Лист и капля'
+    }, {
+      id: 'planet',
+      name: 'Планета'
+    }, {
+      id: 'tree',
+      name: 'Ель'
+    }, {
+      id: 'simpletree',
+      name: 'Дерево'
+    }, {
+      id: 'duck',
+      name: 'Утка'
     }];
 
   _hexToRgb(hex): Color {
@@ -103,7 +124,7 @@ export class LayerDetailComponent implements OnInit {
   }
 
   addField(): void {
-    this.fields.push({options: [], id: null, name: '', type: null});
+    this.fields.push({options: [], id: null, name: '', type: null, sort: 1});
   }
 
   save(): void {

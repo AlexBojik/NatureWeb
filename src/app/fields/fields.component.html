@@ -5,11 +5,15 @@
   </button>
   <div mat-subheader>Состав дополнительных полей</div>
   <mat-list-item *ngFor="let field of fields" role="listitem" class="fields-container">
-    <mat-form-field style="width: 30%">
+    <mat-form-field style="width: 29%">
       <mat-label>Наименование</mat-label>
       <input matInput placeholder="Наименование поля" [(ngModel)]="field.name" required>
     </mat-form-field>
-    <mat-form-field style="width: 30%">
+    <mat-form-field style="width: 9%">
+      <mat-label>Порядок</mat-label>
+      <input matInput type="number" [(ngModel)]="field.sort" min="1">
+    </mat-form-field>
+    <mat-form-field style="width: 29%">
       <mat-label>Тип поля</mat-label>
       <mat-select [(ngModel)]="field.type" required>
         <mat-option *ngFor="let dict of dictionaries" [value]="dict.id">
@@ -17,7 +21,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field style="width: 30%">
+    <mat-form-field style="width: 29%">
       <mat-label>Видимость</mat-label>
       <mat-select [(ngModel)]="field.limitation">
         <mat-option *ngFor="let opt of trueFalseOptions" [value]="opt.val">

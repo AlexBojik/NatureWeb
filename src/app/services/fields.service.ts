@@ -8,6 +8,7 @@ export class Field {
   id: number;
   name: string;
   type: number;
+  sort: number;
   limitation?: boolean;
   options: Option[];
 }

@@ -33,5 +33,5 @@ export const TILE_SIZE = 256;
 export const TILE_SIZE_PKK = 1024;
 export const ZOOM = 13;
 export const VERSION = 8;
-export const IMAGES = ['fish', 'san', 'pit', 'tech', 'rekr', 'dam', 'resh', 'cont', 'reddozer', 'greendozer'];
+export const IMAGES = ['fish', 'san', 'pit', 'tech', 'rekr', 'dam', 'resh', 'cont', 'reddozer', 'greendozer', 'min', 'hands', 'list', 'planet', 'tree', 'simpletree', 'duck'];
 export const CENTER = {lon: 41.9683431, lat: 45.0454764};
