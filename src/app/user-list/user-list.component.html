@@ -2,7 +2,7 @@
   <ng-container matColumnDef="delete" stickyEnd>
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element">
-      <div *ngIf="element === current">
+      <div *ngIf="element === current" style="display: inline-flex">
         <button mat-icon-button (click)="edit(element)">
           <mat-icon color="primary">edit</mat-icon>
         </button>
@@ -21,19 +21,19 @@
 
   <!-- Weight Column -->
   <ng-container matColumnDef="phone">
-    <th mat-header-cell *matHeaderCellDef> Телефон </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Телефон </th>
     <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
   </ng-container>
 
   <!-- Symbol Column -->
   <ng-container matColumnDef="email">
-    <th mat-header-cell *matHeaderCellDef> E-mail </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> E-mail </th>
     <td mat-cell *matCellDef="let element"> {{element.email}} </td>
   </ng-container>
 
   <!-- Symbol Column -->
   <ng-container matColumnDef="admin">
-    <th mat-header-cell *matHeaderCellDef> Администрирование</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Администрирование</th>
     <td mat-cell *matCellDef="let element">
       <mat-checkbox color="primary" [(ngModel)]="element.admin" (change)="toggleAdmin(element)">
       </mat-checkbox>
@@ -41,7 +41,7 @@
   </ng-container>
 
   <ng-container matColumnDef="layers">
-    <th mat-header-cell *matHeaderCellDef> Слои</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Слои</th>
     <td mat-cell *matCellDef="let element">
       <mat-checkbox color="primary" [(ngModel)]="element.layers" (change)="toggleLayers(element)">
       </mat-checkbox>
@@ -49,7 +49,7 @@
   </ng-container>
 
   <ng-container matColumnDef="dicts">
-    <th mat-header-cell *matHeaderCellDef> Справочники</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Справочники</th>
     <td mat-cell *matCellDef="let element">
       <mat-checkbox color="primary" [(ngModel)]="element.dicts" (change)="toggleDicts(element)">
       </mat-checkbox>
@@ -57,21 +57,21 @@
   </ng-container>
 
   <ng-container matColumnDef="messages">
-    <th mat-header-cell *matHeaderCellDef> Обращения</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Обращения</th>
     <td mat-cell *matCellDef="let element">
       <mat-checkbox color="primary" [(ngModel)]="element.messages" (change)="toggleDMessages(element)">
       </mat-checkbox>
     </td>
   </ng-container>
   <ng-container matColumnDef="info">
-    <th mat-header-cell *matHeaderCellDef> Доп. информация</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Доп. информация</th>
     <td mat-cell *matCellDef="let element">
       <mat-checkbox color="primary" [(ngModel)]="element.info" (change)="toggleInfo(element)">
       </mat-checkbox>
     </td>
   </ng-container>
-  <ng-container matColumnDef="block">
-    <th mat-header-cell *matHeaderCellDef> Блокировка</th>
+  <ng-container matColumnDef="block" >
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Блокировка</th>
     <td mat-cell *matCellDef="let element">
       <mat-checkbox color="primary" [(ngModel)]="element.block" (change)="toggleBlock(element)">
       </mat-checkbox>
