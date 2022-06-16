@@ -55,6 +55,12 @@ export class UserListComponent implements AfterViewInit {
     });
   }
 
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+
   toggleBlock(user: User): void {
     this._usrSrv.updateUser(user);
   }

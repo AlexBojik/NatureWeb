@@ -1,8 +1,13 @@
+<mat-form-field style="width: 90%" class="mx-2 mt-1">
+    <mat-label>Фильтр</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Введите строку" #input>
+</mat-form-field>
+
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z1" matSort>
   <ng-container matColumnDef="delete" stickyEnd>
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element">
-      <div *ngIf="element === current" style="display: inline-flex">
+      <div *ngIf="element === current" class="d-flex">
         <button mat-icon-button (click)="edit(element)">
           <mat-icon color="primary">edit</mat-icon>
         </button>
