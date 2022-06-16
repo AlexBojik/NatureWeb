@@ -10,7 +10,7 @@
                 (click)="!checkbox ? selectLayer(node) : layerSelectionToggle(node)"
                 [ngClass]="node===selected && !checkbox ? 'selected' : 'none'">
           <mat-icon class="material-icons" *ngIf="!!node.color" [ngStyle]="{'color': node.color}">stop</mat-icon>
-          <img class="material-icons" *ngIf="node.symbol" [src]="'../assets/png/' + node.symbol + '.png'" style="width: 16px; height: 16px">
+          <img class="material-icons" *ngIf="node.symbol" [src]="'../assets/png/' + node.symbol + '.png'" style="width: 24px; height: 24px">
           {{node.name}}
         </button>
       </div>
@@ -25,9 +25,9 @@
                       [indeterminate]="descendantsPartiallySelected(node)"
                       (change)="groupSelectionToggle(node)">
         </mat-checkbox>
-        <button mat-button color="primary" (click)="!checkbox ? selectLayer(node) : groupSelectionToggle(node)"
+        <button mat-button class="h-100" color="primary" (click)="!checkbox ? selectLayer(node) : groupSelectionToggle(node)"
                 [ngClass]="node===selected && !checkbox ? 'selected' : 'none'">
-          <mat-icon class="material-icons" *ngIf="!!node.icon" svgIcon="{{node.icon}}"></mat-icon>
+          <mat-icon class="material-icons" style="height: 36px;" *ngIf="!!node.icon" svgIcon="{{node.icon}}"></mat-icon>
           {{node.name}}
         </button>
       </div>
