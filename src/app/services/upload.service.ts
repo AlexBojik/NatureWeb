@@ -202,9 +202,9 @@ export class UploadService {
         }
 
         if (currentHead === 'Наименование') {
-          currentObj.name = str[i];
+          currentObj.name = str[i]?.trim();
         } else if (currentHead === 'Координаты') {
-          const re = /..°.{1,2}΄.{1,7}"/g;
+          const re = /..°.{1,2}΄.{1,10}"/g;
           let x = 0;
           let y = 0;
           let match;

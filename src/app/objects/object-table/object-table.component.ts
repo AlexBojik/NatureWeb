@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {LayersService} from '../../layers/layers.service';
+import {Layer, LayersService} from '../../layers/layers.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {GeoObject, ObjectsService} from '../../services/objects.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -22,6 +22,7 @@ export class ObjectTableComponent implements OnInit {
   objects: GeoObject[] = [];
   dataSource: MatTableDataSource<GeoObject>;
   current: GeoObject;
+  layer: Layer;
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -34,25 +35,34 @@ export class ObjectTableComponent implements OnInit {
               private _mapSrv: MapService,
               private _navSrv: NavigateService,
               public dialog: MatDialog) {
-    this._layersSrv.selected$.subscribe(l => {
-      this.loading = true;
-      this.loading = false;
-
-      this._objSrv.getObjects(l.id)
-        .then(objects => {
-          this.objects = [];
-          for (const f of objects) {
-            const geoObject = new GeoObject(this._layersSrv.selected.id, f.properties.name, f.geometry.type, [], '', []);
-            geoObject.geoJson = f.geometry;
-            geoObject.id = f.id as number;
-            this.objects.push(geoObject);
-          }
-          this.loading = false;
-          // l.objects = objects;
-          // this.objects = objects;
-          this.dataSource = new MatTableDataSource<GeoObject>(this.objects);
-        });
+    this._layersSrv.selected$.subscribe(layer => {
+      this.update(layer)
     });
+  }
+  update(layer: Layer) {
+
+    this.loading = true;
+    this.layer = layer
+
+    this._objSrv.getObjects(layer.id)
+      .then(objects => {
+
+        if (!layer) { return }
+        if (layer.id !== this.layer.id) { return }
+
+        this.objects = [];
+        for (const f of objects) {
+          const geoObject = new GeoObject(this._layersSrv.selected.id, f.properties.name, f.geometry.type, [], '', []);
+          geoObject.geoJson = f.geometry;
+          geoObject.id = f.id as number;
+          this.objects.push(geoObject);
+        }
+        this.loading = false;
+        // l.objects = objects;
+        // this.objects = objects;
+        this.dataSource = new MatTableDataSource<GeoObject>(this.objects);
+      });
+
   }
 
   ngOnInit(): void {
