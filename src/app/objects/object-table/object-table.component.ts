@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Layer, LayersService} from '../../layers/layers.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {GeoObject, ObjectsService} from '../../services/objects.service';
@@ -10,6 +10,7 @@ import {MapboxComponent} from '../../mapbox/mapbox.component';
 import * as mapboxgl from 'mapbox-gl';
 import {MapService} from '../../services/map.service';
 import {NavigateService} from '../../services/navigate.service';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-object-table',
@@ -17,12 +18,15 @@ import {NavigateService} from '../../services/navigate.service';
   styleUrls: ['./object-table.component.scss']
 })
 export class ObjectTableComponent implements OnInit {
-  loading = true;
+
+  @ViewChild('empTbSort') empTbSort = new MatSort();
+
+  isLoading = true;
   displayedColumns: string[] = ['id', 'name', 'description', 'delete'];
   objects: GeoObject[] = [];
   dataSource: MatTableDataSource<GeoObject>;
   current: GeoObject;
-  layer: Layer;
+  layerLoaded: Layer;
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -41,14 +45,16 @@ export class ObjectTableComponent implements OnInit {
   }
   update(layer: Layer) {
 
-    this.loading = true;
-    this.layer = layer
+    if (this.layerLoaded?.id === layer.id) { return }
+    this.layerLoaded = layer
+    this.isLoading = true;
 
     this._objSrv.getObjects(layer.id)
       .then(objects => {
 
-        if (!layer) { return }
-        if (layer.id !== this.layer.id) { return }
+        if (!layer){ return  }
+        if (layer.id !== this.layerLoaded.id) { return }
+        this.dataSource = null;
 
         this.objects = [];
         for (const f of objects) {
@@ -57,10 +63,10 @@ export class ObjectTableComponent implements OnInit {
           geoObject.id = f.id as number;
           this.objects.push(geoObject);
         }
-        this.loading = false;
-        // l.objects = objects;
-        // this.objects = objects;
+
         this.dataSource = new MatTableDataSource<GeoObject>(this.objects);
+        this.dataSource.sort = this.empTbSort;
+        this.isLoading = false;
       });
 
   }

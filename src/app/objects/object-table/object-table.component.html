@@ -10,11 +10,11 @@
     <mat-label>Фильтр</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Введите строку" #input>
   </mat-form-field>
-  <mat-spinner *ngIf="loading"></mat-spinner>
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
   <div class="table-container">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z1" *ngIf="!loading" style="width: 90%;">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z1" style="width: 90%;" matSort #empTbSort="matSort" [hidden]="isLoading">
       <ng-container matColumnDef="delete" stickyEnd>
-        <th mat-header-cell *matHeaderCellDef></th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
         <td mat-cell *matCellDef="let element" stickyEnd>
           <div *ngIf="element === current">
             <button mat-icon-button (click)="pick(element)">
@@ -28,17 +28,17 @@
       </ng-container>
 
       <ng-container matColumnDef="id" >
-        <th mat-header-cell *matHeaderCellDef>#</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
         <td mat-cell *matCellDef="let element"> {{element.id}} </td>
       </ng-container>
 
       <ng-container matColumnDef="name" style="width: 30%">
-        <th mat-header-cell *matHeaderCellDef> Наименование</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Наименование</th>
         <td mat-cell *matCellDef="let element"> {{element.name}} </td>
       </ng-container>
 
       <ng-container matColumnDef="description" style="width: 30%">
-        <th mat-header-cell *matHeaderCellDef> Представление</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Представление</th>
         <td mat-cell *matCellDef="let element"> {{element.description}} </td>
       </ng-container>
 
