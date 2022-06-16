@@ -69,3 +69,14 @@ body {
 .example-spacer {
   flex: 1 1 auto;
 }
+
+
+// @import "~bootstrap/scss/bootstrap-utilities";
+
+// //Generate utilites for Cursor
+// $utilities: map-merge($utilities,
+//         ("cursor": (property: cursor,
+//                 values: auto default pointer wait text move help not-allowed),
+//         ));
+
+@import '~bootstrap/scss/bootstrap';
