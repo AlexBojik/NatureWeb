@@ -390,6 +390,9 @@ export class UploadService {
   }
 
   private async _loadFeature(f: Feature<Geometry>, fields: Field[]): Promise<{}> {
+    if (!f.geometry) {
+      return
+    }
     const geoObject = new GeoObject(this._layersSrv.selected.id, f.properties.Name, f.geometry.type, [], '', []);
     geoObject.geoJson = f.geometry;
     await this._fillFields(f, fields, geoObject);
