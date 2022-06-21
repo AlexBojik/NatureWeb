@@ -1,9 +1,12 @@
-<div class="container mat-elevation-z6">
-  <button mat-button color="primary" (click)="addNews()">
-    <mat-icon>add</mat-icon>
-    Добавить
-  </button>
-  <div class="table-container">
+<div class="container-xxl mat-elevation-z6">
+  <div class="row">
+    <button mat-button color="primary" (click)="addNews()">
+      <mat-icon>add</mat-icon>
+      Добавить
+    </button>
+  </div>
+  <div class="row">
+  <div class="col-lg table-container">
     <table mat-table [dataSource]="news" class="example-table"
            matSort matSortActive="created" matSortDisableClear matSortDirection="desc">
 
@@ -51,4 +54,5 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;" (mouseenter)="current = row"></tr>
     </table>
   </div>
+</div>
 </div>

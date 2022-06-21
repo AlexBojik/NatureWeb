@@ -12,11 +12,15 @@
 table {
   width: 100%;
 }
-
+.mat-column-description {
+  max-width: 800px;
+}
 .mat-column-created,
 .mat-column-start,
 .mat-column-end {
-  max-width: 48px;
+  max-width: 64px;
+  min-width: 48px;
+  vertical-align: baseline;
 }
 
 .mat-column-delete {
