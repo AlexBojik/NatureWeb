@@ -1,3 +1,4 @@
+import { CoordsHelper } from './Helpers/coords.helper';
 import {Injectable} from '@angular/core';
 import * as proj4x from 'proj4';
 import {GeoObject, ObjectsService} from './objects.service';
@@ -204,30 +205,13 @@ export class UploadService {
         if (currentHead === 'Наименование') {
           currentObj.name = str[i]?.trim();
         } else if (currentHead === 'Координаты') {
-          const re = /..°.{1,2}΄.{1,10}"/g;
-          let x = 0;
-          let y = 0;
-          let match;
-          do {
-            match = re.exec(str[i]);
-            if (match) {
-              const [g, ms] = match[0].split('°');
-              const [m, s] = ms.split('΄');
-              if (x === 0) {
-                x = parseInt(g, 0) + parseInt(m, 0) / 60 + parseFloat(s.replace('"', '')) / 3600;
-              } else {
-                y = parseInt(g, 0) + parseInt(m, 0) / 60 + parseFloat(s.replace('"', '')) / 3600;
-                if (x > y) {
-                  currentObj.coordinates.push([y, x]);
-                } else {
-                  currentObj.coordinates.push([x, y]);
-                }
+          let coords = CoordsHelper.parseGMSFromString(str[i])
 
-                x = 0;
-                y = 0;
-              }
-            }
-          } while (match);
+          coords.forEach(coordPair => {
+            // Note: Mapbox GL uses longitude, latitude coordinate order (as opposed to latitude, longitude) to match GeoJSON.
+            currentObj.coordinates.push([coordPair.longitude, coordPair.latitude])
+          });
+
         } else if (currentHead === 'Координаты (десятичные)') {
           lat = parseFloat(str[i]);
           lon = parseFloat(str[++i]);

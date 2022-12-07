@@ -15,13 +15,21 @@ import {environment} from '../../environments/environment';
 })
 export class MenuComponent implements OnInit {
   userName = '';
-  showLayersButton = false;
-  showDictionaries = false;
-  showMessages = false;
-  showAdmin = false;
-  showSearch = false;
+  // showLayersButton = false;
+  // showDictionaries = false;
+  // showMessages = false;
+  // showAdmin = false;
+  // showSearch = false;
+  // countMessages: number;
+  // showUsers = false;
+
+  showLayersButton = true;
+  showDictionaries = true;
+  showMessages = true;
+  showAdmin = true;
+  showSearch = true;
   countMessages: number;
-  showUsers = false;
+  showUsers = true;
 
   constructor(private userSrv: UsersService,
               private mapSrv: MapService,
