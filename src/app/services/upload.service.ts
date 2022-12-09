@@ -1,3 +1,4 @@
+import { XLSHelper } from './Helpers/xls.helper';
 import { CoordsHelper } from './Helpers/coords.helper';
 import {Injectable} from '@angular/core';
 import * as proj4x from 'proj4';
@@ -144,111 +145,25 @@ export class UploadService {
   }
 
   async readXLS(binStr, name): Promise<any[]> {
+    const result = [];
+
     let allFields = [];
     await this._fldSrv.getAllFields().then(flds => {
       allFields = flds;
     });
+
     const data = this._excelSrv.importFromFile(binStr) as any[];
+    const headers = data.slice(0, 1)[0] as [];
+    const rows = data.slice(1, data.length)
+    const rowData = XLSHelper.parseXLSDataToRowData(headers, rows)
 
-    const headers = data.slice(0, 1)[0];
-    const len = headers.length;
+    rowData.forEach(row => {
+      let objectsRow = XLSHelper.objectsForXLSRow(row, allFields)
+      result.concat(...objectsRow)
+    });
 
-    const objects = [];
 
-    let currentHead = headers[0];
-    let currentField = allFields.find(f => f.name === currentHead);
-    let currentValue = [];
-    let currentObj = {coordinates: [], fields: [], name};
-
-    for (const str of data.slice(1, data.length)) {
-      let lon = 0.0;
-      let lat = 0.0;
-      let k = 1.0;
-      if (str[0] !== undefined) {
-        if (currentObj.coordinates.length > 0) {
-          if (currentValue.length > 0) {
-            currentObj.fields.push({fieldId: currentField.id, value: currentValue.join(' ')});
-            currentValue = [];
-          }
-          objects.push(currentObj);
-        }
-        currentObj = {coordinates: [], fields: [], name};
-      }
-      for (let i = 0; i < len; i++) {
-        if (headers[i] !== undefined) {
-          if (currentValue.length > 0) {
-            currentObj.fields.push({fieldId: currentField.id, value: currentValue.join(' ')});
-            currentValue = [];
-          }
-          currentHead = headers[i];
-          currentField = allFields.find(f => f.name === currentHead);
-        }
-        if (currentHead === 'СШ') {
-          lat += (str[i] / k);
-          if (k === 3600.0) {
-            k = 1.0;
-          } else {
-            k *= 60.0;
-          }
-        } else if (currentHead === 'ВД') {
-          lon += str[i] / k;
-          if (k === 3600.0) {
-            k = 1.0;
-          } else {
-            k *= 60.0;
-          }
-        }
-        if (!str[i]) {
-          continue;
-        }
-
-        if (currentHead === 'Наименование') {
-          currentObj.name = str[i]?.trim();
-        } else if (currentHead === 'Координаты') {
-          let coords = CoordsHelper.parseGMSFromString(str[i])
-
-          coords.forEach(coordPair => {
-            // Note: Mapbox GL uses longitude, latitude coordinate order (as opposed to latitude, longitude) to match GeoJSON.
-            currentObj.coordinates.push([coordPair.longitude, coordPair.latitude])
-          });
-
-        } else if (currentHead === 'Координаты (десятичные)') {
-          lat = parseFloat(str[i]);
-          lon = parseFloat(str[++i]);
-        } else {
-          if (!!currentField) {
-            if (!str[i]) {
-              continue;
-            }
-            if (currentField.type > 0) {
-              let opt = currentField.options.find(o => o.name === str[i]);
-              if (!opt) {
-                const value = new Value();
-                value.name = str[i];
-                value.dictId = currentField.type;
-                await this._dictSrv.saveValue(value).then(id => {
-                  opt = {id, name: str[i]};
-                  currentField.options.push(opt);
-                });
-              }
-              currentObj.fields.push({fieldId: currentField.id, valueNum: opt.id});
-            } else {
-              currentValue.push(str[i]);
-            }
-          }
-        }
-      }
-      if (currentValue.length > 0) {
-        currentObj.fields.push({fieldId: currentField.id, value: currentValue.join(' ')});
-        currentValue = [];
-      }
-      if (lon > 0 && lat > 0 || currentObj.coordinates.length === 0) {
-        currentObj.coordinates.push([lon, lat]);
-      }
-    }
-    objects.push(currentObj);
-
-    return Promise.resolve(objects);
+    return Promise.resolve(result);
   }
 
   uploadMIF(file): void {
@@ -585,3 +500,4 @@ export class UploadService {
       });
   }
 }
+
