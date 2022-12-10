@@ -1,8 +1,8 @@
-import { Dictionary } from './../dictionaries.service';
+import { Dictionary, Value, DictionariesService } from './../dictionaries.service';
 import { CoordsHelper } from './coords.helper';
 
 export class XLSRowData {
-  fields = new Map<string, any> ()
+  fields: any = {}
   // name: string
   // coords: string
   // coordsDec: string
@@ -38,6 +38,20 @@ class XLSHeaderIndexes {
   }
 }
 
+class XLSColumn {
+  name: string;
+  length: number;
+}
+
+const ExportXLSColumns: XLSColumn[] = [
+  { name: 'Наименование', length: 1 },
+  { name: 'Координаты', length: 1 },
+  { name: 'Координаты (десятичные)', length: 2 },
+  { name: 'СШ', length: 3 },
+  { name: 'ВД', length: 3 },
+  { name: 'Точки', length: 1 },
+]
+
 export class XLSHelper {
 
   static parseXLSDataToRowData(headers: string[], rows: string[]): XLSRowData[] {
@@ -46,68 +60,101 @@ export class XLSHelper {
     rows.forEach(row => {
       let record = new XLSRowData()
 
-      for (let i = 0; i < headers.length; i++) {
+      let currentHeader = undefined
+      for (let i = 0; i < row.length; i++) {
+        let cellValue = row[i]
         let header = headers[i]
-        if (header && header.length > 0) {
-          record.fields[header[i]] = row[i]
+        if (header !== undefined) {
+          currentHeader = header
         }
-      }
-    });
-    return result
-  }
 
-  static parseXLSDataToRowData1(xlsdata: any[]): XLSRowData[] {
-    const headers = xlsdata.slice(0, 1)[0] as [];
-
-    const indexes = new XLSHeaderIndexes(headers)
-
-    let rows = xlsdata.slice(1, xlsdata.length)
-
-    let result: XLSRowData[] = []
-
-    rows.forEach(row => {
-      let record = new XLSRowData(row, indexes)
+        if (currentHeader !== undefined) {
+          if (record.fields[currentHeader] === undefined) {
+            record.fields[currentHeader] = [cellValue]
+          } else {
+            record.fields[currentHeader].push(cellValue)
+          }
+        }
+    }
       result.push(record)
     });
-
     return result
   }
 
-  static objectsForXLSRow(row: XLSRowData, dbFields: any[]): any[] {
-    let result = []
 
-    const nameValue = row.fields['Наименование']
-    const coordValue = row.fields['Координаты']
+
+  static async objectsForXLSRow(row: XLSRowData, dbFields: any[], dictSrv: DictionariesService): Promise<any[]> {
+
+    const nameValue = row.fields['Наименование']?.[0]?.trim()
+    const coordValue = row.fields['Координаты']?.[0]
     const coordDecValue = row.fields['Координаты (десятичные)']
     const latValue = row.fields['СШ']
     const lonValue = row.fields['ВД']
-    const pointsValue = row.fields['Точки']
+    const pointsValue = row.fields['Точки']?.[0]
 
     if (!(nameValue && nameValue.length > 0)) {
-      return
+      return []
     }
 
-    const fieldsValue = []
+    return XLSHelper.makeFieldsData(dbFields, row, dictSrv).then( fieldsValue => {
+      let result = []
+      if (pointsValue && pointsValue.length > 0) {
 
-    if (pointsValue && pointsValue.length > 0) {
+      } else if (coordValue && coordValue.length > 0) {
+        let obj = {coordinates: [], fields: fieldsValue, name: nameValue};
+        let coords = CoordsHelper.parseGMSFromString(coordValue)
+        coords.forEach(coordPair => {
+          // Note: Mapbox GL uses longitude, latitude coordinate order (as opposed to latitude, longitude) to match GeoJSON.
+          obj.coordinates.push([coordPair.longitude, coordPair.latitude])
+        });
+        result.push(obj)
+      } else if (coordDecValue && coordDecValue.length > 0) {
 
-    } else if (coordValue && coordValue.length > 0) {
-      let obj = {coordinates: [], fields: fieldsValue, name: nameValue};
-      let coords = CoordsHelper.parseGMSFromString(coordValue)
-      coords.forEach(coordPair => {
-        // Note: Mapbox GL uses longitude, latitude coordinate order (as opposed to latitude, longitude) to match GeoJSON.
-        obj.coordinates.push([coordPair.longitude, coordPair.latitude])
-      });
-      result.push(obj)
-    } else if (coordDecValue && coordDecValue.length > 0) {
+      } else if (latValue != undefined && latValue.length >=3 &&
+          lonValue != undefined && lonValue.length >= 3 ) {
 
-    }
+          let lat = latValue[0] + (latValue[1]/ 60) + (latValue[2]/ 3600)
+          let lon = lonValue[0] + (lonValue[1]/ 60) + (lonValue[2]/ 3600)
 
-    let obj = {coordinates: [], fields: [], name: nameValue};
-
-    return result
+          let obj = {coordinates: [lon, lat], fields: fieldsValue, name: nameValue};
+          result.push(obj)
+      }
+      return result
+    })
   }
+
+  static async makeFieldsData(dbFields: any[], row: XLSRowData, dictSrv: DictionariesService): Promise<any[]> {
+    let result = []
+
+    for (const key in row.fields) {
+      if (Object.prototype.hasOwnProperty.call(row.fields, key)) {
+        const field = dbFields.find(f => f.name === key);
+        if (field != undefined && field.id != undefined) {
+          const value = row.fields[key]?.join('')?.trim();
+          if (field.type > 0) {
+            let opt = field.options.find(o => o.name === value);
+            if (!opt) {
+              const dictValue = new Value();
+              dictValue.name = value;
+              dictValue.dictId = field.type;
+              await dictSrv.saveValue(value).then(id => {
+                opt = {id, name: value};
+                field.options.push(opt);
+              });
+            }
+            result.push({fieldId: field.id, valueNum: opt.id});
+          } else {
+            result.push({fieldId: field.id, valueNum: value})
+          }
+        }
+      }
+    }
+
+    return Promise.resolve(result)
+  }
+
 }
+
 
 
     // let currentHead = headers[0];

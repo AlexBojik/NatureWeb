@@ -145,7 +145,7 @@ export class UploadService {
   }
 
   async readXLS(binStr, name): Promise<any[]> {
-    const result = [];
+    let result = [];
 
     let allFields = [];
     await this._fldSrv.getAllFields().then(flds => {
@@ -157,11 +157,11 @@ export class UploadService {
     const rows = data.slice(1, data.length)
     const rowData = XLSHelper.parseXLSDataToRowData(headers, rows)
 
-    rowData.forEach(row => {
-      let objectsRow = XLSHelper.objectsForXLSRow(row, allFields)
-      result.concat(...objectsRow)
-    });
-
+    for (const row of rowData) {
+      await Promise.resolve(XLSHelper.objectsForXLSRow(row, allFields, this._dictSrv).then (objectsRow => {
+        result = result.concat(...objectsRow)
+      }))
+    }
 
     return Promise.resolve(result);
   }
