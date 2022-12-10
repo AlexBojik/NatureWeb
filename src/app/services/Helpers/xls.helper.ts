@@ -144,7 +144,7 @@ export class XLSHelper {
             }
             result.push({fieldId: field.id, valueNum: opt.id});
           } else {
-            result.push({fieldId: field.id, valueNum: value})
+            result.push({fieldId: field.id, value: value})
           }
         }
       }
