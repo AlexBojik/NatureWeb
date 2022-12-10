@@ -116,7 +116,7 @@ export class XLSHelper {
           let lat = latValue[0] + (latValue[1]/ 60) + (latValue[2]/ 3600)
           let lon = lonValue[0] + (lonValue[1]/ 60) + (lonValue[2]/ 3600)
 
-          let obj = {coordinates: [lon, lat], fields: fieldsValue, name: nameValue};
+          let obj = {coordinates: [[lon, lat]], fields: fieldsValue, name: nameValue};
           result.push(obj)
       }
       return result
