@@ -46,20 +46,13 @@ export class XLSHelper {
     do {
       match = regMask.exec(textString);
       if (match) {
-        let lon = XLSHelper.gmsToDeg(match.groups?.lon)
-        let lat = XLSHelper.gmsToDeg(match.groups?.lat)
+        let lon = CoordsHelper.gmsToDeg(match.groups?.lon)
+        let lat = CoordsHelper.gmsToDeg(match.groups?.lat)
         let text = (match.groups?.text ?? '').trim()
         result.push({text, lon, lat})
-        console.log(match.groups)
       }
     } while (match);
     return result
-  }
-
-  static gmsToDeg(textGMS: any): number {
-    const [g, ms] = textGMS.split('°');
-    const [m, s] = ms.split('΄');
-    return parseInt(g, 0) + parseInt(m, 0) / 60 + parseFloat(s.replace('"', '')) / 3600;
   }
 
   static async objectsForXLSRow(row: XLSRowData, dbFields: any[], dictSrv: DictionariesService): Promise<any[]> {

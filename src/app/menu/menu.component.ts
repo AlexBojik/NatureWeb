@@ -1,3 +1,4 @@
+import { CoordsHelper } from './../services/Helpers/coords.helper';
 import {Component, OnInit} from '@angular/core';
 import {UsersService} from '../services/users.service';
 import {MapService} from '../services/map.service';
@@ -89,7 +90,12 @@ export class MenuComponent implements OnInit {
   }
 
   search(value: string): void {
-    this.objSrv.filterObjects(1, value);
+    let coords = CoordsHelper.tryParseAnyFormat(value)
+    if (coords) {
+      this.mapSrv.map.flyTo({center: [coords.lon, coords.lat], zoom: 16});
+    } else {
+      this.objSrv.filterObjects(1, value);
+    }
   }
 
   exit(): void {
