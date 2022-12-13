@@ -1,3 +1,4 @@
+import { ProgressDialogComponent } from './../../progress-dialog/progress-dialog.component';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Layer, LayersService} from '../../layers/layers.service';
 import {MatTableDataSource} from '@angular/material/table';
@@ -11,6 +12,7 @@ import * as mapboxgl from 'mapbox-gl';
 import {MapService} from '../../services/map.service';
 import {NavigateService} from '../../services/navigate.service';
 import { MatSort } from '@angular/material/sort';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-object-table',
@@ -22,11 +24,25 @@ export class ObjectTableComponent implements OnInit {
   @ViewChild('empTbSort') empTbSort = new MatSort();
 
   isLoading = true;
-  displayedColumns: string[] = ['id', 'name', 'description', 'delete'];
+  displayedColumns: string[] = ['selection', 'id', 'name', 'description', 'controls'];
   objects: GeoObject[] = [];
   dataSource: MatTableDataSource<GeoObject>;
   current: GeoObject;
   layerLoaded: Layer;
+
+  _checkedAll: boolean
+  public set checkedAll(v: boolean) {
+    this._checkedAll = v;
+    for (const obj of this.objects) {
+      obj.checked = this._checkedAll
+    }
+  }
+
+  public get checkedAll() : boolean {
+    return this._checkedAll
+  }
+
+
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -88,16 +104,49 @@ export class ObjectTableComponent implements OnInit {
     });
   }
 
-  delete(obj): void {
+  delete(obj: GeoObject): void {
     // TODO: вопрос об удалении
-    this._objSrv.deleteObject(obj.id)
-      .then(() => {
-        const index = this.objects.indexOf(obj);
-        this.objects.splice(index, 1);
-        this.dataSource = new MatTableDataSource<GeoObject>(this.objects);
-      }).catch(() => {
-        this._snackBar.open('Не удалось удалить элемент!', 'OK', {duration: 500});
+    this.dialog.open(ProgressDialogComponent);
+    let deleteList = this.objects.filter( o => o.checked)
+    if (deleteList.length === 0) {
+      obj.checked = true
+      deleteList = [obj]
+    }
+
+    const deletePromises = deleteList.map (deleteObj => {
+      return this._objSrv.deleteObject(deleteObj.id)
+        .then(() => {
+          return {id: deleteObj.id, success: true}
+        }).catch(() => {
+          return {id: deleteObj.id, success: false}
+      });
     });
+
+    Promise.all(deletePromises).then( (results) => {
+      const isHasError = results.find( r => !r.success) || false
+      if (isHasError) {
+        this._snackBar.open('Не удалось удалить минимум один элемент!', 'OK', {duration: 500});
+      }
+      const successDeletedIds = results.filter( r => r.success).map ( r => r.id)
+      for (const objectId of successDeletedIds) {
+        const deletedObjIndex = this.objects.findIndex( o => o.id == objectId)
+        if (deletedObjIndex !== undefined) {
+          this.objects.splice(deletedObjIndex, 1);
+        }
+      }
+      this.dataSource = new MatTableDataSource<GeoObject>(this.objects);
+      this._checkedAll = false
+      this.dialog.closeAll()
+    })
+
+    // this._objSrv.deleteObject(obj.id)
+    //   .then(() => {
+    //     const index = this.objects.indexOf(obj);
+    //     this.objects.splice(index, 1);
+    //     this.dataSource = new MatTableDataSource<GeoObject>(this.objects);
+    //   }).catch(() => {
+    //     this._snackBar.open('Не удалось удалить элемент!', 'OK', {duration: 500});
+    // });
 
   }
 

@@ -1,3 +1,4 @@
+import { ProgressDialogComponent } from './progress-dialog/progress-dialog.component';
 import '@angular/common/locales/global/ru';
 import {BrowserModule} from '@angular/platform-browser';
 import {LOCALE_ID, NgModule} from '@angular/core';
@@ -89,6 +90,7 @@ import { FilesComponent } from './menu/admin/files/files.component';
   declarations: [
     AppComponent,
     ImportComponent,
+    ProgressDialogComponent,
     MenuComponent,
     AdminComponent,
     ConnectDbComponent,

@@ -15,6 +15,7 @@ export class GeoObject {
   fields: FieldValueObject[];
   geoJson: Geometry;
   description: string;
+  checked: boolean;
 
   constructor(layerId, name, type, coordinates, description = '', fields = []) {
     this.layerId = layerId;

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="">
   <div style="display:flex;">
     <button mat-raised-button color="primary" (click)="add()">
       <mat-icon>add</mat-icon>
@@ -13,18 +13,10 @@
   <mat-spinner *ngIf="isLoading"></mat-spinner>
   <div class="table-container">
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z1" style="width: 90%;" matSort #empTbSort="matSort" [hidden]="isLoading">
-      <ng-container matColumnDef="delete" stickyEnd>
-        <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-        <td mat-cell *matCellDef="let element" stickyEnd>
-          <div *ngIf="element === current">
-            <button mat-icon-button (click)="pick(element)">
-              <mat-icon color="primary">place</mat-icon>
-            </button>
-            <button mat-icon-button (click)="delete(element)">
-              <mat-icon style="color:red;">delete</mat-icon>
-            </button>
-          </div>
-        </td>
+
+      <ng-container matColumnDef="selection" >
+        <th mat-header-cell *matHeaderCellDef mat-header><mat-checkbox [(ngModel)]="checkedAll"></mat-checkbox></th>
+        <td mat-cell *matCellDef="let element"> <mat-checkbox [(ngModel)]="element.checked"></mat-checkbox> </td>
       </ng-container>
 
       <ng-container matColumnDef="id" >
@@ -33,13 +25,27 @@
       </ng-container>
 
       <ng-container matColumnDef="name" style="width: 30%">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Наименование</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Наименование</th>
         <td mat-cell *matCellDef="let element"> {{element.name}} </td>
       </ng-container>
 
       <ng-container matColumnDef="description" style="width: 30%">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Представление</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Представление</th>
         <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="controls" style="width: 10%" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+        <td mat-cell *matCellDef="let element" class="m-0 p-0" stickyEnd>
+          <div *ngIf="element === current" class="d-flex">
+            <button mat-icon-button (click)="pick(element)">
+              <mat-icon color="primary">place</mat-icon>
+            </button>
+            <button mat-icon-button (click)="delete(element)">
+              <mat-icon style="color:red;">delete</mat-icon>
+            </button>
+          </div>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="height: 40px;"></tr>
