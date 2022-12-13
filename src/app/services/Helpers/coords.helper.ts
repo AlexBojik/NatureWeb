@@ -28,6 +28,7 @@ export class CoordsHelper {
   static tryParseDegradPair(value: any): { lon: number; lat: number } {
     const regMasks = [
       /(?<lat>[0-9]{2}\.[0-9]{1,15})(.*)СШ(.*)(?<lon>[0-9]{2}\.[0-9]{1,15})/g,
+      /(?<lon>[0-9]{2}\.[0-9]{1,15})(.*)ВД(.*)(?<lat>[0-9]{2}\.[0-9]{1,15})/g,
       /(?<lat>[0-9]{2}\.[0-9]{1,15})(.*),(.*)(?<lon>[0-9]{2}\.[0-9]{1,15})/g,
     ]
     const textString = value.trim()
