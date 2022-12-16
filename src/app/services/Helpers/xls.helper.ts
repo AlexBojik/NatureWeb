@@ -16,7 +16,7 @@ export class XLSHelper {
 
       let currentHeader = undefined
       for (let i = 0; i < row.length; i++) {
-        let cellValue = row[i]
+        let cellValue = String(row[i])
         let header = headers[i]
         if (header !== undefined) {
           currentHeader = header
@@ -79,7 +79,7 @@ export class XLSHelper {
 
       } else if (coordValue && coordValue.length > 0) {
         let obj = {coordinates: [], fields: fieldsValue, name: nameValue};
-        let coords = CoordsHelper.parseGMSFromString(coordValue)
+        let coords = CoordsHelper.parseCoordsFromString(coordValue)
         coords.forEach(coordPair => {
           // Note: Mapbox GL uses longitude, latitude coordinate order (as opposed to latitude, longitude) to match GeoJSON.
           obj.coordinates.push([coordPair.longitude, coordPair.latitude])

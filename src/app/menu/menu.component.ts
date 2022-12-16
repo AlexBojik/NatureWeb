@@ -90,7 +90,7 @@ export class MenuComponent implements OnInit {
   }
 
   search(value: string): void {
-    let coords = CoordsHelper.tryParseAnyFormat(value)
+    let coords = CoordsHelper.tryParsePairAnyFormat(value)
     if (coords) {
       this.mapSrv.map.flyTo({center: [coords.lon, coords.lat], zoom: 16});
     } else {
