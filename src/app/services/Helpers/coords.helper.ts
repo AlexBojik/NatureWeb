@@ -1,3 +1,6 @@
+// import * as proj4 from 'proj4';
+import * as proj4x from 'proj4';
+import { Tools } from './tools.helper';
 
 
 export class PointLongLat {
@@ -5,11 +8,18 @@ export class PointLongLat {
   public longitude: number = 0.0
 }
 
+const msk26zones =[
+  //z1
+  "+proj=tmerc +lat_0=0 +lon_0=40.98333333333 +k=1 +x_0=1300000 +y_0=-4511057.63 +ellps=krass +towgs84=23.57,-140.95,-79.8,0,0.35,0.79,-0.22 +units=m +no_defs",
+  //z2
+  "+proj=tmerc +lat_0=0 +lon_0=43.98333333333 +k=1 +x_0=2300000 +y_0=-4511057.63 +ellps=krass +towgs84=23.57,-140.95,-79.8,0,0.35,0.79,-0.22 +units=m +no_defs",
+]
+
 // Note: Mapbox GL uses longitude, latitude coordinate order (as opposed to latitude, longitude) to match GeoJSON.
 
 export class CoordsHelper {
 
-  static tryParseAnyFormat(value) {
+  static tryParsePairAnyFormat(value) {
 
     let result = this.tryParseGMSPair(value)
     if (result) {
@@ -73,6 +83,43 @@ export class CoordsHelper {
     const [g, ms] = textGMS.split('°');
     const [m, s] = ms.split('΄');
     return parseInt(g, 0) + parseInt(m, 0) / 60 + parseFloat(s.replace('"', '')) / 3600;
+  }
+
+  static parseCoordsFromString(text: string): PointLongLat[] {
+    let result = [];
+    result = this.parseMSKFromString(text)
+    if (result?.length > 0) {
+      return result
+    }
+    result = this.parseGMSFromString(text)
+    if (result?.length > 0) {
+      return result
+    }
+
+    return []
+  }
+
+  // МСК-26 зона 1 т. 1 429532.317м.2314965.55м.
+  static parseMSKFromString(textString: string): PointLongLat[] {
+    ///
+    let proj4 = (proj4x as any).default;
+    const regMaskZone = /МСК-26 зона (?<zone>[1-2]{1,2})/g
+    const matchMSK = regMaskZone.exec(textString);
+    if (matchMSK) {
+      const zone = parseInt(matchMSK.groups?.zone ?? "1")
+      const coordsText = textString.substring(matchMSK.index)
+      const regMask = / *[тТ]\. (?<point>[0-9]{1,2}) *(?<x>[0-9]{1,7}\.[0-9]{1,5})м\. *(?<y>[0-9]{1,7}\.[0-9]{1,5})м\./g
+      let allMatches = Tools.matchAllRegExp(regMask, coordsText)
+      let coords = allMatches.map( m => m.groups)
+
+      let result: PointLongLat[] = []
+      for (const coord of coords) {
+        let wgscoord = proj4(msk26zones[zone-1],'WGS84',[parseFloat(coord.y), parseFloat(coord.x)]);
+        result.push({longitude: wgscoord[0], latitude: wgscoord[1]})
+      }
+      return result
+    }
+    return []
   }
 
   static parseGMSFromString(textString: string): PointLongLat[] {
