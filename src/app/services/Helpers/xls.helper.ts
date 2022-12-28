@@ -8,7 +8,8 @@ export class XLSRowData {
 
 export class XLSHelper {
   static consts = {
-    nameLabel: 'Наименование'
+    nameLabel: 'Наименование',
+    cadastreNumberLabel: 'Кадастровый номер'
   }
 
   static parseXLSDataToRowData(headers: string[], rows: string[]): XLSRowData[] {
@@ -40,12 +41,31 @@ export class XLSHelper {
     return result
   }
 
+  static async objectsDataForXLSRows(rows: XLSRowData[], dbFields: any[], dictSrv: DictionariesService): Promise<any[]> {
+    let result = []
+
+    for (const row of rows) {
+      const nameValue = row.fields[this.consts.nameLabel]?.[0]?.trim() || row.fields[this.consts.cadastreNumberLabel]?.[0]?.trim()
+      const latValue = row.fields['СШ']
+      const lonValue = row.fields['ВД']
+
+      await XLSHelper.makeFieldsData(dbFields, row, dictSrv).then( fieldsValue => {
+        result.push({coordinates: [], fields: fieldsValue, name: nameValue, description: ""})
+      })
+      // await Promise.resolve(XLSHelper.objectsForXLSRow(row, dbFields, dictSrv).then (objectsRow => {
+      //   result = result.concat(...objectsRow)
+      // }))
+    }
+
+    return result
+  }
+
   static async objectsForXLSRows(rows: XLSRowData[], dbFields: any[], dictSrv: DictionariesService): Promise<any[]> {
     let result = []
     let multirowObject = undefined
 
     for (const row of rows) {
-      const nameValue = row.fields['Наименование']?.[0]?.trim()
+      const nameValue = row.fields[this.consts.nameLabel]?.[0]?.trim() || row.fields[this.consts.cadastreNumberLabel]?.[0]?.trim()
       const latValue = row.fields['СШ']
       const lonValue = row.fields['ВД']
 
@@ -90,8 +110,6 @@ export class XLSHelper {
     const descriptionValue = row.fields['Представление']?.[0]?.trim() ?? ''
     const coordValue = row.fields['Координаты']?.[0]
     const coordDecValue = row.fields['Координаты (десятичные)']
-    // const latValue = row.fields['СШ']
-    // const lonValue = row.fields['ВД']
     const pointsValue = row.fields['Точки']?.[0]
 
     if (!(nameValue && nameValue.length > 0)) {
@@ -118,15 +136,6 @@ export class XLSHelper {
           result.push(obj)
         }
       } else if (coordDecValue && coordDecValue.length > 0) {
-
-      // } else if (latValue != undefined && latValue.length >=3 &&
-      //     lonValue != undefined && lonValue.length >= 3 ) {
-
-      //     let lat = parseFloat(latValue[0]) + (latValue[1]/ 60) + (latValue[2]/ 3600)
-      //     let lon = parseFloat(lonValue[0]) + (lonValue[1]/ 60) + (lonValue[2]/ 3600)
-
-      //     let obj = {coordinates: [[lon, lat]], fields: fieldsValue, name: nameValue, description: ""};
-      //     result.push(obj)
       }
       return result
     })
