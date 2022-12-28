@@ -118,7 +118,7 @@ export class UploadService {
            let coordinates = obj.coordinates[0];
 
            if (obj.coordinates.length === 2) {
-             const o1 = new GeoObject(this._layersSrv.selected.id, obj.name, type, coordinates, '', obj.fields);
+             const o1 = new GeoObject(this._layersSrv.selected.id, obj.name, type, coordinates, obj.description , obj.fields);
              promises.push(this._objectsSrv.postObject(o1));
              coordinates = obj.coordinates[1];
            } else if (obj.coordinates.length !== 1) {
@@ -131,7 +131,7 @@ export class UploadService {
              coordinates = [obj.coordinates];
            }
 
-           const o = new GeoObject(this._layersSrv.selected.id, obj.name, type, coordinates, '', obj.fields);
+           const o = new GeoObject(this._layersSrv.selected.id, obj.name, type, coordinates, obj.description, obj.fields);
            promises.push(this._objectsSrv.postObject(o));
          } else {
            console.log('coordinates empty');
@@ -157,11 +157,9 @@ export class UploadService {
     const rows = data.slice(1, data.length)
     const rowData = XLSHelper.parseXLSDataToRowData(headers, rows)
 
-    for (const row of rowData) {
-      await Promise.resolve(XLSHelper.objectsForXLSRow(row, allFields, this._dictSrv).then (objectsRow => {
-        result = result.concat(...objectsRow)
-      }))
-    }
+    await Promise.resolve(XLSHelper.objectsForXLSRows(rowData, allFields, this._dictSrv).then (objectsRows => {
+      result = objectsRows
+    }))
 
     return Promise.resolve(result);
   }

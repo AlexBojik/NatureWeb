@@ -6,6 +6,7 @@ import { Tools } from './tools.helper';
 export class PointLongLat {
   public latitude: number = 0.0
   public longitude: number = 0.0
+  public text = ''
 }
 
 const msk26zones =[
@@ -99,6 +100,27 @@ export class CoordsHelper {
     return []
   }
 
+
+  static objectsPointsParse(textString: any): any[] {
+    let result = [];
+    const regMask = /(?<text>.*) *(?<lat>..°.{1,2}΄.{1,10}")(.*)(?<lon>..°.{1,2}΄.{1,10}")/g
+    let latSH = 0;
+    let lonVD = 0;
+    let match;
+
+    do {
+      match = regMask.exec(textString);
+      if (match) {
+        let lon = CoordsHelper.gmsToDeg(match.groups?.lon)
+        let lat = CoordsHelper.gmsToDeg(match.groups?.lat)
+        let text = (match.groups?.text ?? '').trim()
+        result.push({text, lon, lat})
+      }
+    } while (match);
+    return result
+  }
+
+
   // МСК-26 зона 1 т. 1 429532.317м.2314965.55м.
   static parseMSKFromString(textString: string): PointLongLat[] {
     ///
@@ -115,7 +137,7 @@ export class CoordsHelper {
       let result: PointLongLat[] = []
       for (const coord of coords) {
         let wgscoord = proj4(msk26zones[zone-1],'WGS84',[parseFloat(coord.y), parseFloat(coord.x)]);
-        result.push({longitude: wgscoord[0], latitude: wgscoord[1]})
+        result.push({text: 'т ' + coord.point, longitude: wgscoord[0], latitude: wgscoord[1]})
       }
       return result
     }
