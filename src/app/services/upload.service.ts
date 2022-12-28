@@ -118,7 +118,7 @@ export class UploadService {
            let coordinates = obj.coordinates[0];
 
            if (obj.coordinates.length === 2) {
-             const o1 = new GeoObject(this._layersSrv.selected.id, obj.name, type, coordinates, '', obj.fields);
+             const o1 = new GeoObject(this._layersSrv.selected.id, obj.name, type, coordinates, obj.description , obj.fields);
              promises.push(this._objectsSrv.postObject(o1));
              coordinates = obj.coordinates[1];
            } else if (obj.coordinates.length !== 1) {
@@ -131,7 +131,7 @@ export class UploadService {
              coordinates = [obj.coordinates];
            }
 
-           const o = new GeoObject(this._layersSrv.selected.id, obj.name, type, coordinates, '', obj.fields);
+           const o = new GeoObject(this._layersSrv.selected.id, obj.name, type, coordinates, obj.description, obj.fields);
            promises.push(this._objectsSrv.postObject(o));
          } else {
            console.log('coordinates empty');
@@ -142,6 +142,26 @@ export class UploadService {
      });
     };
     reader.readAsBinaryString(file);
+  }
+
+  async readXLSwoCoords(binStr, name): Promise<any[]> {
+    let result = [];
+
+    let allFields = [];
+    await this._fldSrv.getAllFields().then(flds => {
+      allFields = flds;
+    });
+
+    const data = this._excelSrv.importFromFile(binStr) as any[];
+    const headers = data.slice(0, 1)[0] as [];
+    const rows = data.slice(1, data.length)
+    const rowData = XLSHelper.parseXLSDataToRowData(headers, rows)
+
+    await Promise.resolve(XLSHelper.objectsDataForXLSRows(rowData, allFields, this._dictSrv).then (objectsRows => {
+      result = objectsRows
+    }))
+
+    return Promise.resolve(result);
   }
 
   async readXLS(binStr, name): Promise<any[]> {
@@ -157,11 +177,9 @@ export class UploadService {
     const rows = data.slice(1, data.length)
     const rowData = XLSHelper.parseXLSDataToRowData(headers, rows)
 
-    for (const row of rowData) {
-      await Promise.resolve(XLSHelper.objectsForXLSRow(row, allFields, this._dictSrv).then (objectsRow => {
-        result = result.concat(...objectsRow)
-      }))
-    }
+    await Promise.resolve(XLSHelper.objectsForXLSRows(rowData, allFields, this._dictSrv).then (objectsRows => {
+      result = objectsRows
+    }))
 
     return Promise.resolve(result);
   }
@@ -332,8 +350,24 @@ export class UploadService {
     }
   }
 
-  readKPT(xml, objects): void {
-    this._fldSrv.getAllFields().then(fields => {
+  uploadKPT(xls, xmls): void {
+    const reader: FileReader = new FileReader();
+    reader.onload = async (e: any) => {
+      this.filesToLoad = xmls.length;
+      this.filesLoaded = 0;
+      this.readXLSwoCoords(e.target.result, name).then(objects => {
+        return this._fldSrv.getAllFields().then(fields => {
+          Object.values(xmls).forEach(xml => {
+            this.readKPT(xml, objects, fields);
+          });
+        });
+      });
+    };
+    reader.readAsBinaryString(xls);
+  }
+
+  readKPT(xml, objects, fields): void {
+    // this._fldSrv.getAllFields().then(fields => {
       const cadastreField = fields.find(f => f.name === 'Кадастровый номер');
 
       const map: Map<string, {
@@ -361,22 +395,10 @@ export class UploadService {
         this._resolvePromises(promises, name);
       };
       fileReader.readAsText(xml);
-    });
+    // });
   }
 
-  uploadKPT(xls, xmls): void {
-    const reader: FileReader = new FileReader();
-    reader.onload = async (e: any) => {
-      this.filesToLoad = xmls.length;
-      this.filesLoaded = 0;
-      this.readXLS(e.target.result, name).then(objects => {
-        Object.values(xmls).forEach(xml => {
-          this.readKPT(xml, objects);
-        });
-      });
-    };
-    reader.readAsBinaryString(xls);
-  }
+
 
   private readKPT10(map, result, promises, allFields): void {
     const layerId = this._layersSrv.selected.id;
