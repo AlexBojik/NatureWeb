@@ -35,7 +35,7 @@ export class ObjectTableComponent implements OnInit {
 
   public set isCheckedAll(value: boolean) {
     this._isCheckedAll = value;
-    for (const obj of this.objects) {
+    for (const obj of this.dataSource.filteredData) {
       obj.checked = this._isCheckedAll;
     }
   }
