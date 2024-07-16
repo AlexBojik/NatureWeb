@@ -1,6 +1,6 @@
 import {ProgressDialogComponent} from './../../progress-dialog/progress-dialog.component';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Layer, LayersService} from '../../layers/layers.service';
+import {LayersService} from '../../layers/layers.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {GeoObject, ObjectsService} from '../../services/objects.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -13,6 +13,7 @@ import {MapService} from '../../services/map.service';
 import {NavigateService} from '../../services/navigate.service';
 import {MatSort} from '@angular/material/sort';
 import {Console} from 'console';
+import {Layer} from '../../layers/models/layer';
 
 @Component({
   selector: 'app-object-table',

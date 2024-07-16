@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {GeoObject} from '../../services/objects.service';
-import {Layer, LayersService} from '../../layers/layers.service';
+import {LayersService} from '../../layers/layers.service';
+import {Layer} from '../../layers/models/layer';
 
 @Component({
   selector: 'app-objects',

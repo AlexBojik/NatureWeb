@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
 import {GeoObject, ObjectsService} from './objects.service';
-import {Layer, LayersService} from '../layers/layers.service';
+import {LayersService} from '../layers/layers.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {DynamicComponentService} from './dynamic-component.service';
 import {CoordinateService} from './coordinate.service';
@@ -24,6 +24,7 @@ import {
 } from '../../consts';
 import {environment} from '../../environments/environment';
 import {BaseLayerService} from '../base-layers/base-layer.service';
+import {Layer} from '../layers/models/layer';
 
 @Injectable({
   providedIn: 'root'

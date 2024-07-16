@@ -2,28 +2,37 @@ import { Injectable } from '@angular/core';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 
+
+export class ImageRecord {
+  id: string;
+  name?: string;
+  url?: string;
+}
 @Injectable({
   providedIn: 'root'
 })
 export class ImageService {
 
+  images: ImageRecord[] = [
+    { id: 'water', name: 'Синяя капля', url: './assets/water.svg' },
+    { id: 'oil', name: 'Нефтяная вышка', url: './assets/oil-pump.svg' },
+    { id: 'forest', name: 'Лес', url: './assets/forest.svg' },
+    { id: 'security', name: 'Щит', url: './assets/security.svg' },
+    { id: 'deer', name: 'Олень', url: './assets/deer.svg' },
+    { id: 'pkk', name: 'Росреестр', url: './assets/pkk.svg' },
+    { id: 'contacts', name: 'Контакты', url: './assets/contacts.svg' },
+  ];
   constructor(private matIconRegistry: MatIconRegistry,
               private domSanitizer: DomSanitizer) { }
 
   init(): void {
-    // капля
-    this.matIconRegistry.addSvgIcon('water', this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/water.svg'));
-    // нефтяная вышка
-    this.matIconRegistry.addSvgIcon('oil', this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/oil-pump.svg'));
-    // лес
-    this.matIconRegistry.addSvgIcon('forest', this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/forest.svg'));
-    // щит
-    this.matIconRegistry.addSvgIcon('security', this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/security.svg'));
-    // олень
-    this.matIconRegistry.addSvgIcon('deer', this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/deer.svg'));
-    // росреестр
-    this.matIconRegistry.addSvgIcon('pkk', this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/pkk.svg'));
-    // контакты
-    this.matIconRegistry.addSvgIcon('contacts', this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/contacts.svg'));
+    this.images.forEach( i => {
+      this.matIconRegistry.addSvgIcon(i.id, this.domSanitizer.bypassSecurityTrustResourceUrl(i.url));
+    });
+  }
+
+  getImages(): ImageRecord[] {
+    console.log(this.images);
+    return this.images;
   }
 }

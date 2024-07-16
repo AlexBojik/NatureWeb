@@ -2,11 +2,30 @@
   <mat-tab-group>
     <mat-tab label="Свойства">
       <form [formGroup]="layerForm" style="margin-top: 10px; margin-left: 10px">
+
         <div class="fields-container">
+
           <mat-form-field style="width: 300px">
             <mat-label>Наименование</mat-label>
             <input matInput placeholder="Наименование" formControlName="name" required>
           </mat-form-field>
+          <br>
+          <mat-form-field style="width: 300px" *ngIf="selected.isGroup">
+            <mat-label>Иконка</mat-label>
+            <mat-select formControlName="icon">
+              <mat-option *ngFor="let icon of iconsForGroups" [value]="icon.id">
+<!--                <img src="../../../assets/png/{{icon.id}}.png" width="30px" height="30px" alt="">-->
+                <img src="{{icon.url}}" width="30px" height="30px" alt="">
+                <span class="mx-2 position-absolute">{{icon.name}}</span>
+              </mat-option>
+<!--              <mat-option *ngFor="let icon of icons" [value]="icon.id">-->
+<!--                <img src="../../../assets/png/{{icon.id}}.png" width="30px" height="30px" alt="">-->
+<!--                <span class="mx-2 position-absolute">{{icon.name}}</span>-->
+<!--              </mat-option>-->
+            </mat-select>
+          </mat-form-field>
+
+
           <mat-form-field style="width: 300px" *ngIf="!selected.isGroup">
             <mat-label>Наименование для представления</mat-label>
             <input matInput placeholder="Наименование для представления" formControlName="commonName">
@@ -76,8 +95,8 @@
               <mat-label>Иконка</mat-label>
               <mat-select formControlName="symbol">
                 <mat-option *ngFor="let icon of icons" [value]="icon.id">
-                  <img src="../../../assets/png/{{icon.id}}.png" width="30px" height="30px" alt="" style="margin-top: 20px">
-                  <span style="position: absolute; margin: 10px">{{icon.name}}</span>
+                  <img src="../../../assets/png/{{icon.id}}.png" width="30px" height="30px" alt="" >
+                  <span class="mx-2 position-absolute">{{icon.name}}</span>
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -124,7 +143,7 @@
       <mat-icon>add</mat-icon>
       Добавить поле
     </button>
-    <<mat-tab label="Объекты" *ngIf="isObjectsLayer">
+    <mat-tab label="Объекты" *ngIf="isObjectsLayer && !selected.isGroup && selected.id !== LAYER_UNADDED_ID">
       <div class="w-100">
         <app-object-table></app-object-table>
       </div>

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {Layer, LayersService} from '../layers.service';
+import {LayersService} from '../layers.service';
+import {Layer, LAYER_UNADDED_ID} from '../models/layer';
 
 @Component({
   selector: 'app-layers',
@@ -8,6 +9,7 @@ import {Layer, LayersService} from '../layers.service';
 })
 export class LayerMainComponent implements OnInit {
   selected: Layer;
+  isAddGroupEnabled = true;
 
   constructor(private _layerSrv: LayersService) {
     this._layerSrv.selected$.subscribe(layer => {
@@ -22,6 +24,18 @@ export class LayerMainComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  addGroup(): void {
+    const group = new Layer();
+    group.name = 'Новая группа';
+    group.isGroup = true;
+    group.id = LAYER_UNADDED_ID;
+    group.layers = [];
+    group.icon = '';
+    // this._layerSrv.
+    this._layerSrv.addGroup(group);
+    this._layerSrv.updateTree();
+    this._layerSrv.selected = group;
+  }
   add(): void {
     const layer = new Layer();
 

@@ -2,7 +2,8 @@ import {Component, Input, OnInit} from '@angular/core';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 import {SelectionModel} from '@angular/cdk/collections';
-import {Layer, LayersService} from '../layers.service';
+import {LayersService} from '../layers.service';
+import {Layer} from '../models/layer';
 
 @Component({
   selector: 'app-tree-layers',

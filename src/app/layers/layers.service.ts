@@ -6,30 +6,7 @@ import {Field, FieldsService} from '../services/fields.service';
 import {Color} from '@angular-material-components/color-picker';
 import {URL_LAYER_LIST} from '../../consts';
 import {UsersService} from '../services/users.service';
-
-export class Layer {
-  id: number;
-  name: string;
-  type?: string;
-  group?: number;
-  url?: string;
-  color?: string;
-  commonName?: string;
-  commonDescription?: string;
-  warning?: boolean;
-  symbol?: string;
-  cluster?: boolean;
-  order?: number;
-  lineWidth?: number;
-  lineColor?: string;
-  limitation?: boolean;
-  icon?: string;
-  layers?: Layer[];
-  isGroup: boolean;
-  col: Color;
-  col1: Color;
-  fields?: Field[];
-}
+import {Layer, LAYER_UNADDED_ID} from './models/layer';
 
 @Injectable({
   providedIn: 'root'
@@ -42,15 +19,16 @@ export class LayersService {
   private _removed = new BehaviorSubject<Layer[]>([]);
   private _added = new BehaviorSubject<Layer>(null);
 
-
   public readonly layers$: Observable<Layer[]> = this._layers.asObservable();
 
   set selected(value) {
     this._selected.next(value);
-    this._fieldSrv.updateFields(value.id).then(fields => {
-      value.fields = fields;
-      this._selected.next(value);
-    });
+    if (value.id !== LAYER_UNADDED_ID) {
+      this._fieldSrv.updateFields(value.id).then(fields => {
+        value.fields = fields;
+        this._selected.next(value);
+      });
+    }
   }
 
   get selected(): Layer {
@@ -65,12 +43,12 @@ export class LayersService {
     if (!layer.isGroup) {
       this._added.next(layer);
     }
-      // this._objSrv.getObjects(layer.id)
-      //   .then(objects => {
-      //       layer.objects = objects;
-      //       this._added.next(layer);
-      //     }
-      //   );
+    // this._objSrv.getObjects(layer.id)
+    //   .then(objects => {
+    //       layer.objects = objects;
+    //       this._added.next(layer);
+    //     }
+    //   );
     // }
   }
 
@@ -120,9 +98,13 @@ export class LayersService {
   }
 
   delete(id: number): void {
-    this._http.delete(URL_LAYER_LIST + '/' + id.toString()).subscribe( _ => {
-        this.updateLayers();
-        this.selected = null;
+    this._http.delete(URL_LAYER_LIST + '/' + id.toString()).subscribe(_ => {
+      this.updateLayers();
+      this.selected = null;
     });
+  }
+
+  addGroup(group: Layer): void {
+    this._added.next(group);
   }
 }

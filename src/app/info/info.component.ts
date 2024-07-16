@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {ObjectsService} from '../services/objects.service';
 import {CoordinateService} from '../services/coordinate.service';
-import {Layer, LayersService} from '../layers/layers.service';
+import {LayersService} from '../layers/layers.service';
 import {UsersService} from '../services/users.service';
 import {MatDialog} from '@angular/material/dialog';
 import {CoordinateComponent} from '../coordinate/coordinate.component';
 import {MapService} from '../services/map.service';
 import * as mapboxgl from 'mapbox-gl';
+import {Layer} from '../layers/models/layer';
 
 @Component({
   selector: 'app-info',

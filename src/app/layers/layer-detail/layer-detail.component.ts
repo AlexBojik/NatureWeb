@@ -1,10 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {Layer, LayersService} from '../layers.service';
+import {LayersService} from '../layers.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {DictionariesService, Dictionary} from '../../services/dictionaries.service';
 import {Field} from '../../services/fields.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Color} from '@angular-material-components/color-picker';
+import {Layer, LAYER_UNADDED_ID} from '../models/layer';
+import {ImageService} from '../../services/image.service';
 
 @Component({
   selector: 'app-layer-detail',
@@ -12,6 +14,7 @@ import {Color} from '@angular-material-components/color-picker';
   styleUrls: ['./layer-detail.component.scss']
 })
 export class LayerDetailComponent implements OnInit {
+  LAYER_UNADDED_ID = LAYER_UNADDED_ID;
   isSelected = false;
   isObjectsLayer = false;
   selected: Layer;
@@ -28,7 +31,12 @@ export class LayerDetailComponent implements OnInit {
     },
   ];
   groups: Layer[] = [];
+  iconsForGroups = this._imageService.getImages();
   icons = [
+    // {
+    //   id: 'water',
+    //   name: 'Синяя капля'
+    // },
     {
      id: 'cont',
      name: 'Зеленый портфель'
@@ -97,6 +105,7 @@ export class LayerDetailComponent implements OnInit {
   constructor(private layersSrv: LayersService,
               private dictSrv: DictionariesService,
               private fb: FormBuilder,
+              private _imageService: ImageService,
               private _snackBar: MatSnackBar) {
     layersSrv.selected$.subscribe(layer => {
       // TODO: fields
@@ -113,6 +122,7 @@ export class LayerDetailComponent implements OnInit {
     });
     layersSrv.layers$.subscribe(layers => {
       this.groups = layers.filter(l => l.isGroup);
+      console.log(this.groups);
     });
     dictSrv.dictionaries$.subscribe(dictionaries => {
       this.dictionaries = [{id: 0, name: 'Строка'}, {id: -1, name: 'Флаг'}, {id: -2, name: 'Число'}];
