@@ -16,21 +16,13 @@ import {environment} from '../../environments/environment';
 })
 export class MenuComponent implements OnInit {
   userName = '';
-  // showLayersButton = false;
-  // showDictionaries = false;
-  // showMessages = false;
-  // showAdmin = false;
-  // showSearch = false;
-  // countMessages: number;
-  // showUsers = false;
-
-  showLayersButton = true;
-  showDictionaries = true;
-  showMessages = true;
-  showAdmin = true;
-  showSearch = true;
+  showLayersButton = false;
+  showDictionaries = false;
+  showMessages = false;
+  showAdmin = false;
+  showSearch = false;
   countMessages: number;
-  showUsers = true;
+  showUsers = false;
 
   constructor(private userSrv: UsersService,
               private mapSrv: MapService,
@@ -41,6 +33,14 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!environment.production) {
+      this.showLayersButton = true;
+      this.showDictionaries = true;
+      this.showMessages = true;
+      this.showAdmin = true;
+      this.showSearch = true;
+      this.showUsers = true;
+    }
     this.msgSrv.count$.subscribe(count => {
       this.countMessages = count;
     });
