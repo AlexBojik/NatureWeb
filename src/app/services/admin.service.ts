@@ -54,4 +54,11 @@ export class AdminService {
       this.getDumps();
     });
   }
+
+  deleteDump(d: Dump): void {
+    const url = this._url + 'dumps';
+    this._http.delete(url + '/' + d.id).subscribe(_ => {
+      this.getDumps();
+    });
+  }
 }

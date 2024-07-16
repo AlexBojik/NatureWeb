@@ -1,7 +1,17 @@
 <div>
-  <mat-list role="list">
+  <mat-list role="list"
+    (mouseleave)="hoveredRow = undefined"
+  >
     <mat-list-item *ngFor="let d of dumps" role="listitem">
-      <a href="{{dumpsCatalog}}{{d.name}}">{{d.name}}</a>
+      <div class="d-flex align-items-center" (mouseenter)="hoveredRow = d">
+        <a href="{{dumpsCatalog}}{{d.name}}">{{ d.name }}</a>
+        <button *ngIf="d === hoveredRow" mat-icon-button
+                class="mx-2"
+                (click)="delete(d)"
+        >
+          <mat-icon style="color:red;">delete</mat-icon>
+        </button>
+      </div>
     </mat-list-item>
   </mat-list>
 </div>

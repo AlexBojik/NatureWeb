@@ -11,6 +11,7 @@ export class BackupDbComponent implements OnInit {
   dumps: Dump[];
   dumpsCatalog = environment.baseUrl + 'dump/';
   creating = false;
+  hoveredRow: Dump;
 
   constructor(private _admSrv: AdminService) {
     this._admSrv.dumps$.subscribe(dumps => {
@@ -25,6 +26,11 @@ export class BackupDbComponent implements OnInit {
 
   createDump(): void {
     this._admSrv.createDump();
+    this.creating = true;
+  }
+
+  delete(d: Dump): void {
+    this._admSrv.deleteDump(d);
     this.creating = true;
   }
 }
