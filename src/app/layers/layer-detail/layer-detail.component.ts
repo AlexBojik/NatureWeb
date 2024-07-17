@@ -7,6 +7,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {Color} from '@angular-material-components/color-picker';
 import {Layer, LAYER_UNADDED_ID} from '../models/layer';
 import {ImageService} from '../../services/image.service';
+import {LayerGroup} from '../models/layer-group';
 
 @Component({
   selector: 'app-layer-detail',
@@ -38,8 +39,8 @@ export class LayerDetailComponent implements OnInit {
     //   name: 'Синяя капля'
     // },
     {
-     id: 'cont',
-     name: 'Зеленый портфель'
+      id: 'cont',
+      name: 'Зеленый портфель'
     }, {
       id: 'dam',
       name: 'Плотина'
@@ -135,6 +136,30 @@ export class LayerDetailComponent implements OnInit {
 
   addField(): void {
     this.fields.push({options: [], id: null, name: '', type: null, sort: 1});
+  }
+
+  saveGroup(): void {
+    const current = this.layerForm.value;
+
+    if (!current.isGroup) {
+      return;
+    }
+
+    const group: LayerGroup = {
+      id: current.id,
+      name: current.name,
+      icon: current.icon,
+    };
+
+    this.layersSrv.postLayerGroup(group)
+      .then(() => {
+        this._snackBar.open('Успешно сохранено!', 'OK', {duration: 500});
+        this.layersSrv.updateLayers();
+        this.layersSrv.selected = null;
+      })
+      .catch(() => {
+        this._snackBar.open('Ошибка сохраненения!', 'OK', {duration: 500});
+      });
   }
 
   save(): void {

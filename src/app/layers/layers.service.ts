@@ -4,9 +4,10 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ObjectsService} from '../services/objects.service';
 import {Field, FieldsService} from '../services/fields.service';
 import {Color} from '@angular-material-components/color-picker';
-import {URL_LAYER_LIST} from '../../consts';
+import {URL_LAYER_LIST, URL_LAYERGROUPS_LIST} from '../../consts';
 import {UsersService} from '../services/users.service';
 import {Layer, LAYER_UNADDED_ID} from './models/layer';
+import {LayerGroup} from './models/layer-group';
 
 @Injectable({
   providedIn: 'root'
@@ -90,10 +91,21 @@ export class LayersService {
   }
 
   postLayer(layer): Promise<any> {
+    if (layer.isGroup) {
+      return Promise.reject('Is a group layer');
+    }
     if (layer.id === undefined) {
       return this._http.post(URL_LAYER_LIST, layer).toPromise();
     } else {
       return this._http.put(URL_LAYER_LIST, layer).toPromise();
+    }
+  }
+
+  postLayerGroup(group: LayerGroup): Promise<any> {
+    if (group.id === undefined || group.id === LAYER_UNADDED_ID) {
+      return this._http.post(URL_LAYERGROUPS_LIST, group).toPromise();
+    } else {
+      return this._http.put(URL_LAYERGROUPS_LIST, group).toPromise();
     }
   }
 
@@ -107,4 +119,5 @@ export class LayersService {
   addGroup(group: Layer): void {
     this._added.next(group);
   }
+
 }
