@@ -128,17 +128,21 @@
 <!--        </button>-->
 <!--      </mat-list>-->
       <p>
+        <button mat-raised-button color="primary" (click)="saveGroup()" [disabled]="!layerForm.valid" *ngIf="selected.isGroup">
+          <mat-icon>save</mat-icon>
+          Сохранить Группу
+        </button>
+        <button mat-raised-button color="warn" (click)="deleteGroup()" [disabled]="!layerForm.valid || selected.layers.length!=0 || selected.id === LAYER_UNADDED_ID" *ngIf="selected.isGroup">
+          <mat-icon>delete</mat-icon>
+          Удалить Группу
+        </button>
+
         <button mat-raised-button color="primary" (click)="save()" [disabled]="!layerForm.valid" *ngIf="!selected.isGroup">
           <mat-icon>save</mat-icon>
           Сохранить
         </button>
 
-        <button mat-raised-button color="primary" (click)="saveGroup()" [disabled]="!layerForm.valid" *ngIf="selected.isGroup">
-          <mat-icon>save</mat-icon>
-          Сохранить Группу
-        </button>
-
-        <button mat-raised-button color="warn" (click)="delete()" [disabled]="!layerForm.valid || selected.isGroup">
+        <button mat-raised-button color="warn" (click)="delete()" [disabled]="!layerForm.valid" *ngIf="!selected.isGroup">
           <mat-icon>delete</mat-icon>
           Удалить
         </button>

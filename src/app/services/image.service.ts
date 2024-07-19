@@ -32,7 +32,6 @@ export class ImageService {
   }
 
   getImages(): ImageRecord[] {
-    console.log(this.images);
     return this.images;
   }
 }

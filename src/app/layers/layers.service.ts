@@ -24,7 +24,7 @@ export class LayersService {
 
   set selected(value) {
     this._selected.next(value);
-    if (value.id !== LAYER_UNADDED_ID) {
+    if (!!value && !value.isGroup && value.id !== LAYER_UNADDED_ID) {
       this._fieldSrv.updateFields(value.id).then(fields => {
         value.fields = fields;
         this._selected.next(value);
@@ -119,5 +119,10 @@ export class LayersService {
   addGroup(group: Layer): void {
     this._added.next(group);
   }
-
+  deleteLayerGroup(id: any): Promise<any> {
+    return this._http.delete(URL_LAYERGROUPS_LIST + '/' + id.toString()).toPromise().then(result => {
+      this.updateLayers();
+      this.selected = null;
+    });
+  }
 }

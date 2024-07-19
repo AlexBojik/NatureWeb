@@ -123,7 +123,6 @@ export class LayerDetailComponent implements OnInit {
     });
     layersSrv.layers$.subscribe(layers => {
       this.groups = layers.filter(l => l.isGroup);
-      console.log(this.groups);
     });
     dictSrv.dictionaries$.subscribe(dictionaries => {
       this.dictionaries = [{id: 0, name: 'Строка'}, {id: -1, name: 'Флаг'}, {id: -2, name: 'Число'}];
@@ -136,6 +135,28 @@ export class LayerDetailComponent implements OnInit {
 
   addField(): void {
     this.fields.push({options: [], id: null, name: '', type: null, sort: 1});
+  }
+  deleteGroup(): void {
+    const current = this.layerForm.value;
+
+    if (!current.isGroup) {
+      return;
+    }
+    const id = current.id;
+    if (!id || id === LAYER_UNADDED_ID) {
+      return;
+    }
+    this.layersSrv.deleteLayerGroup(id)
+      .then(() => {
+        this._snackBar.open('Успешно', 'OK', {duration: 500});
+        this.layersSrv.updateLayers();
+        this.layersSrv.selected = null;
+      })
+      .catch((r) => {
+        console.log(r);
+        this._snackBar.open('Ошибка сохраненения!', 'OK', {duration: 500});
+      });
+
   }
 
   saveGroup(): void {
@@ -157,7 +178,8 @@ export class LayerDetailComponent implements OnInit {
         this.layersSrv.updateLayers();
         this.layersSrv.selected = null;
       })
-      .catch(() => {
+      .catch((r) => {
+        console.log(r);
         this._snackBar.open('Ошибка сохраненения!', 'OK', {duration: 500});
       });
   }
